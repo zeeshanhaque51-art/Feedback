@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Feedback — Influidity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#00B9BB; --teal-deep:#00888A; --teal-soft:#E1F5F5; --teal-hair:#9DE0E1;
+  --ink:#1C0B2A; --shell:#F4F4F3; --surface:#FFFFFF; --raised:#FAFAF9;
+  --body:#5C5A63; --muted:#8F8C96; --border:#DEDDDA; --hair:#EDECEA;
+  --green:#0E7A55; --red:#BF2C1E; --amber:#8A5A00;
+  --sans:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--sans);font-size:15px;line-height:1.5;color:var(--ink);background:var(--shell);-webkit-font-smoothing:antialiased}
+.mono{font-family:var(--mono)}
+button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;background:none;border:none}
+input,textarea{font-family:inherit;font-size:inherit;color:inherit}
+:focus{outline:none}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.band{background:var(--surface);border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center;gap:9px;padding:0 18px;position:sticky;top:0;z-index:10}
+.band .bdot{width:11px;height:11px;border-radius:50%;background:var(--teal);flex:none}
+.band .bname{font-weight:600;letter-spacing:-0.03em;font-size:15px}
+.band .bid{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto}
+
+.wrap{max-width:480px;margin:0 auto;padding:22px 18px 60px}
+h2{font-size:22px;font-weight:600;letter-spacing:-0.03em;line-height:1.25}
+.lead{color:var(--body);margin-top:8px;font-size:14.5px}
+.micro{font-size:9px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--muted);display:block;margin-bottom:6px}
+.muted{color:var(--muted)}
+.hide{display:none!important}
+
+.piece{background:var(--surface);border:1px solid var(--border);border-radius:11px;overflow:hidden;margin-bottom:24px}
+.piece .art{height:112px;background:linear-gradient(135deg,#1C0B2A,#00888A);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px;text-align:center;padding:0 18px}
+.piece .meta{padding:11px 14px;font-size:12.5px;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.piece .meta b{color:var(--ink);font-weight:600}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 22px;border-radius:999px;font-size:15px;font-weight:600;letter-spacing:-0.01em;border:1px solid transparent;width:100%}
+.btn-teal{background:var(--teal);color:var(--ink)}
+.btn-ink{background:var(--ink);color:#fff}
+.btn-ghost{background:var(--surface);border-color:var(--border);color:var(--ink)}
+.btn-sm{height:38px;font-size:13.5px}
+.btn:disabled{opacity:.45}
+.stack>*{margin-top:10px}
+
+.recwrap{text-align:center;padding:14px 0 4px}
+.rec{width:132px;height:132px;border-radius:50%;background:var(--teal);display:inline-flex;align-items:center;justify-content:center;
+  box-shadow:0 0 0 0 rgba(0,185,187,.55);transition:background .15s}
+.rec:active{background:#00a6a8}
+.rec.on{background:var(--red);animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(191,44,30,.45)}70%{box-shadow:0 0 0 22px rgba(191,44,30,0)}100%{box-shadow:0 0 0 0 rgba(191,44,30,0)}}
+.wave{height:30px;display:flex;align-items:center;justify-content:center;gap:3px;margin:14px 0 6px}
+.wave i{width:3px;background:var(--teal-deep);border-radius:2px;height:5px;transition:height .08s linear}
+.timer{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.status{font-size:13.5px;color:var(--body);min-height:20px;margin-top:6px}
+
+.pt{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 12px 12px 0;display:flex;gap:10px;align-items:flex-start;margin-bottom:9px}
+.pt .idx{width:26px;height:26px;border-radius:50%;background:var(--teal-soft);color:var(--teal-deep);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none;margin-left:12px}
+.pt .txt{flex:1;min-width:0}
+.pt textarea{width:100%;border:none;background:none;resize:none;font-size:14.5px;line-height:1.45;overflow:hidden}
+.pt .area{display:inline-flex;align-items:center;height:20px;padding:0 9px;border-radius:999px;border:1px solid var(--teal-hair);color:var(--teal-deep);font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-top:5px}
+.pt .x{width:30px;height:30px;color:var(--muted);font-size:20px;line-height:1;flex:none}
+
+.note{background:var(--teal-soft);border:1px solid var(--teal-hair);border-radius:10px;padding:12px 14px;font-size:13.5px;margin-bottom:18px}
+.warn{background:#FFF6E6;border:1px solid #F0D9A8;border-radius:10px;padding:12px 14px;font-size:13.5px;margin-bottom:18px;color:var(--amber)}
+.tick{width:60px;height:60px;border-radius:50%;background:var(--teal);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--ink)}
+.typed{width:100%;border:1px solid var(--border);border-radius:10px;padding:12px;min-height:120px;font-size:15px;line-height:1.5;resize:vertical;background:var(--surface)}
+.center{text-align:center}
+.spin{width:34px;height:34px;border:3px solid var(--hair);border-top-color:var(--teal-deep);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto}
+@keyframes sp{to{transform:rotate(360deg)}}
+.playback{width:100%;margin-top:14px}
+.foot{margin-top:28px;font-size:11.5px;color:var(--muted);text-align:center;line-height:1.5}
+</style>
+</head>
+<body>
+
+<div class="band">
+  <span class="bdot"></span><span class="bname">Influidity</span>
+  <span class="bid" id="band-id"></span>
+</div>
+
+<div class="wrap" id="app">
+  <div class="center" style="padding-top:60px"><div class="spin"></div>
+  <p class="muted" style="margin-top:16px;font-size:13.5px">Opening your creative…</p></div>
+</div>
+
+<script>
+/* ═══════════ CONFIG — change these two lines only ═══════════ */
+const API = 'https://script.google.com/macros/s/PASTE_YOUR_DEPLOYMENT_ID/exec';
+const MAX_SECONDS = 120;
+/* ════════════════════════════════════════════════════════════ */
+
+const qs = new URLSearchParams(location.search);
+const CID = qs.get('c') || '';
+const TOK = qs.get('t') || '';
+const app = document.getElementById('app');
+
+let piece = null;          // collateral details from the sheet
+let points = [];           // [{change, area}]
+let audioB64 = null;       // base64 wav
+let audioUrl = null;       // local blob url for playback
+let transcript = '';
+let lang = '';
+let submissionId = '';
+
+/* ───────── network ───────── */
+// text/plain keeps it a "simple request" so the browser skips the CORS preflight
+// that Apps Script cannot answer.
+async function call(action, payload){
+  const r = await fetch(API, {
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(Object.assign({action, c:CID, t:TOK}, payload||{}))
+  });
+  const j = await r.json();
+  if(!j.ok) throw new Error(j.error || 'Something went wrong.');
+  return j;
+}
+
+/* ───────── recorder: raw PCM → 16 kHz mono WAV ─────────
+   Deliberately NOT MediaRecorder. Chrome gives webm/opus, iOS Safari gives
+   mp4/aac, and Gemini does not reliably accept either container. WAV is one
+   format, every phone, no server-side conversion.                            */
+let ac, src, node, stream, chunks = [], recording = false, startedAt = 0, tick;
+
+async function startRec(){
+  stream = await navigator.mediaDevices.getUserMedia({
+    audio:{channelCount:1, echoCancellation:true, noiseSuppression:true, autoGainControl:true}
+  });
+  ac = new (window.AudioContext || window.webkitAudioContext)();
+  await ac.resume();
+  src = ac.createMediaStreamSource(stream);
+  node = ac.createScriptProcessor(4096, 1, 1);
+  chunks = [];
+  node.onaudioprocess = e => {
+    if(!recording) return;
+    chunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+    drawWave(e.inputBuffer.getChannelData(0));
+  };
+  src.connect(node); node.connect(ac.destination);
+  recording = true; startedAt = Date.now();
+  tick = setInterval(()=>{
+    const s = Math.floor((Date.now()-startedAt)/1000);
+    const el = document.getElementById('timer');
+    if(el) el.textContent = String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+    if(s >= MAX_SECONDS) stopRec();
+  }, 250);
+}
+
+function stopRec(){
+  if(!recording) return;
+  recording = false; clearInterval(tick);
+  try{ node.disconnect(); src.disconnect(); }catch(e){}
+  stream.getTracks().forEach(t=>t.stop());
+  const rate = ac.sampleRate;
+  ac.close();
+  const flat = flatten(chunks);
+  const down = resample(flat, rate, 16000);
+  const wav  = encodeWav(down, 16000);
+  audioUrl = URL.createObjectURL(new Blob([wav], {type:'audio/wav'}));
+  audioB64 = toBase64(wav);
+  send();
+}
+
+function flatten(list){
+  let n=0; list.forEach(c=>n+=c.length);
+  const out = new Float32Array(n); let o=0;
+  list.forEach(c=>{ out.set(c,o); o+=c.length; });
+  return out;
+}
+function resample(buf, from, to){
+  if(from === to) return buf;
+  const ratio = from/to, len = Math.round(buf.length/ratio), out = new Float32Array(len);
+  for(let i=0;i<len;i++){
+    const start = Math.floor(i*ratio), end = Math.min(Math.floor((i+1)*ratio), buf.length);
+    let sum=0,c=0; for(let j=start;j<end;j++){ sum+=buf[j]; c++; }
+    out[i] = c ? sum/c : 0;
+  }
+  return out;
+}
+function encodeWav(samples, rate){
+  const b = new ArrayBuffer(44 + samples.length*2), v = new DataView(b);
+  const w = (o,s)=>{ for(let i=0;i<s.length;i++) v.setUint8(o+i, s.charCodeAt(i)); };
+  w(0,'RIFF'); v.setUint32(4, 36+samples.length*2, true); w(8,'WAVEfmt ');
+  v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
+  v.setUint32(24,rate,true); v.setUint32(28,rate*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true);
+  w(36,'data'); v.setUint32(40, samples.length*2, true);
+  let o=44; for(let i=0;i<samples.length;i++,o+=2){
+    const s = Math.max(-1, Math.min(1, samples[i]));
+    v.setInt16(o, s<0 ? s*0x8000 : s*0x7FFF, true);
+  }
+  return b;
+}
+function toBase64(buf){
+  const bytes = new Uint8Array(buf); let s='';
+  for(let i=0;i<bytes.length;i+=8192) s += String.fromCharCode.apply(null, bytes.subarray(i,i+8192));
+  return btoa(s);
+}
+function drawWave(data){
+  const bars = document.querySelectorAll('.wave i');
+  if(!bars.length) return;
+  const step = Math.floor(data.length/bars.length);
+  bars.forEach((b,i)=>{
+    let peak=0; for(let j=i*step;j<(i+1)*step;j++) peak = Math.max(peak, Math.abs(data[j]));
+    b.style.height = Math.max(4, Math.min(28, peak*130)) + 'px';
+  });
+}
+
+/* ───────── screens ───────── */
+function art(){
+  return `<div class="piece">
+    <div class="art">${esc(piece.title)}</div>
+    <div class="meta"><b>${esc(piece.client)}</b> · ${esc(piece.type)} · v${piece.version}
+      <span style="margin-left:auto" class="mono">${esc(piece.id)}</span></div>
+  </div>`;
+}
+const esc = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function scIdle(warn){
+  app.innerHTML = `
+    ${warn ? `<div class="warn">${warn}</div>` : ''}
+    ${art()}
+    <h2>Tell us what you'd like changed.</h2>
+    <p class="lead">Press the button and speak — Odia, Hindi or English, whichever you like. We'll turn it into a list you can check before it goes to the team.</p>
+    <div class="recwrap">
+      <button class="rec" id="mic" aria-label="Start recording">
+        <svg width="42" height="42" viewBox="0 0 24 24" fill="none">
+          <rect x="9" y="3" width="6" height="11" rx="3" fill="#1C0B2A"/>
+          <path d="M5 11a7 7 0 0014 0M12 18v3" stroke="#1C0B2A" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="wave"></div>
+      <p class="status">Tap to start</p>
+    </div>
+    <div class="stack" style="margin-top:22px">
+      <button class="btn btn-ghost btn-sm" id="type-instead">Type it instead</button>
+      <button class="btn btn-ghost btn-sm" id="approve-now">This is approved — no changes</button>
+    </div>
+    ${footer()}`;
+  document.getElementById('mic').onclick = onMic;
+  document.getElementById('type-instead').onclick = scTyped;
+  document.getElementById('approve-now').onclick = ()=>approve();
+}
+
+function scRecording(){
+  app.innerHTML = `
+    ${art()}
+    <h2>Listening…</h2>
+    <p class="lead">Say everything you want changed. Take your time — press the button again when you're done.</p>
+    <div class="recwrap">
+      <button class="rec on" id="mic" aria-label="Stop recording">
+        <svg width="34" height="34" viewBox="0 0 26 26"><rect x="4" y="4" width="18" height="18" rx="3" fill="#fff"/></svg>
+      </button>
+      <div class="wave">${Array.from({length:24},()=>'<i></i>').join('')}</div>
+      <p class="timer" id="timer">00:00</p>
+      <p class="status">Press to finish</p>
+    </div>
+    ${footer()}`;
+  document.getElementById('mic').onclick = onMic;
+}
+
+function scProcessing(){
+  app.innerHTML = `${art()}
+    <div class="center" style="padding:40px 0"><div class="spin"></div>
+    <h2 style="margin-top:22px">Working out what you said.</h2>
+    <p class="lead">Splitting it into separate points. A few seconds.</p></div>`;
+}
+
+function scTyped(){
+  app.innerHTML = `${art()}
+    <h2>Type what you'd like changed.</h2>
+    <p class="lead">One line per change is easiest, but a paragraph is fine — we'll split it up.</p>
+    <textarea class="typed" id="typed" style="margin-top:16px" placeholder="Make the logo bigger, remove the price band, correct the phone number…"></textarea>
+    <div class="stack" style="margin-top:14px">
+      <button class="btn btn-teal" id="send-typed">Continue</button>
+      <button class="btn btn-ghost btn-sm" id="back">Speak instead</button>
+    </div>
+    ${footer()}`;
+  document.getElementById('send-typed').onclick = ()=>{
+    const v = document.getElementById('typed').value.trim();
+    if(!v){ document.getElementById('typed').focus(); return; }
+    transcript = v; audioB64 = null; send(true);
+  };
+  document.getElementById('back').onclick = ()=>scIdle();
+}
+
+function scReview(){
+  app.innerHTML = `${art()}
+    <div class="note"><b>Here's what we understood.</b> Change any line that isn't right, remove what you didn't mean, then send.</div>
+    <div id="list">${points.map(row).join('')}</div>
+    <button class="btn btn-ghost btn-sm" id="add" style="margin-top:4px">Add another point</button>
+    ${audioUrl ? `<audio class="playback" controls src="${audioUrl}"></audio>` : ''}
+    <div class="stack" style="margin-top:22px">
+      <button class="btn btn-teal" id="confirm">Send these ${points.length} change${points.length===1?'':'s'}</button>
+      <button class="btn btn-ghost btn-sm" id="redo">Start over</button>
+    </div>
+    ${footer()}`;
+  bindList();
+  document.getElementById('add').onclick = ()=>{ points.push({change:'',area:'Other'}); scReview(); };
+  document.getElementById('redo').onclick = ()=>{ points=[]; audioB64=null; audioUrl=null; scIdle(); };
+  document.getElementById('confirm').onclick = confirmPoints;
+}
+function row(p,i){
+  return `<div class="pt" data-i="${i}">
+    <span class="idx">${i+1}</span>
+    <div class="txt">
+      <textarea rows="1" data-edit="${i}" placeholder="Describe the change">${esc(p.change)}</textarea>
+      <span class="area">${esc(p.area||'Other')}</span>
+    </div>
+    <button class="x" data-rm="${i}" aria-label="Remove point ${i+1}">×</button>
+  </div>`;
+}
+function bindList(){
+  document.querySelectorAll('[data-edit]').forEach(t=>{
+    const grow = ()=>{ t.style.height='auto'; t.style.height = t.scrollHeight+'px'; };
+    grow(); t.addEventListener('input', ()=>{ points[+t.dataset.edit].change = t.value; grow(); });
+  });
+  document.querySelectorAll('[data-rm]').forEach(b=>{
+    b.onclick = ()=>{ points.splice(+b.dataset.rm,1); if(!points.length){ scIdle(); return; } scReview(); };
+  });
+}
+
+function scSent(n){
+  app.innerHTML = `<div class="center" style="padding-top:50px">
+    <div class="tick">✓</div>
+    <h2>Thank you — that's logged.</h2>
+    <p class="lead">We've recorded <b>${n} change${n===1?'':'s'}</b> against <span class="mono">${esc(piece.id)}</span>.
+    Your Influidity team can see them now and will send the updated version to this same link.</p>
+    <p class="lead" style="margin-top:18px">You can close this page.</p>
+  </div>${footer()}`;
+}
+function scApproved(){
+  app.innerHTML = `<div class="center" style="padding-top:50px">
+    <div class="tick">✓</div>
+    <h2>Approved. Thank you.</h2>
+    <p class="lead"><span class="mono">${esc(piece.id)}</span> is marked approved and closed. Nothing further needed from you.</p>
+  </div>${footer()}`;
+}
+function scError(msg, retry){
+  app.innerHTML = `<div class="center" style="padding-top:60px">
+    <h2>${esc(msg)}</h2>
+    ${retry ? `<button class="btn btn-ghost" id="retry" style="margin-top:24px">Try again</button>` : ''}
+  </div>${footer()}`;
+  if(retry) document.getElementById('retry').onclick = retry;
+}
+function footer(){
+  return `<p class="foot">This link is for this one piece only.<br>Influidity Solution Pvt. Ltd.</p>`;
+}
+
+/* ───────── flow ───────── */
+async function onMic(){
+  if(recording){ scProcessing(); stopRec(); return; }
+  try{
+    scRecording();
+    await startRec();
+  }catch(err){
+    // Most common cause in the field: WhatsApp's in-app browser on iPhone,
+    // which will not hand over the microphone.
+    const inApp = /FBAN|FBAV|Instagram|WhatsApp|Line\//i.test(navigator.userAgent);
+    scIdle(inApp
+      ? `<b>Your microphone isn't available in this window.</b> Tap the ⋯ menu and choose "Open in browser", then try again — or type your feedback instead.`
+      : `<b>We couldn't reach your microphone.</b> Allow microphone access for this page, or type your feedback instead.`);
+  }
+}
+
+async function send(typed){
+  scProcessing();
+  try{
+    const r = await call('submitFeedback', {audio: audioB64, text: typed ? transcript : '', mime:'audio/wav'});
+    points = r.points || [];
+    transcript = r.transcript || transcript;
+    lang = r.language || '';
+    submissionId = r.submissionId || '';
+    if(!points.length){ scIdle(`<b>We couldn't make out any changes there.</b> Try again a little closer to the phone, or type it instead.`); return; }
+    scReview();
+  }catch(err){ scError(err.message, ()=>scIdle()); }
+}
+
+async function confirmPoints(){
+  const clean = points.map(p=>({change:(p.change||'').trim(), area:p.area||'Other'})).filter(p=>p.change);
+  if(!clean.length) return;
+  const btn = document.getElementById('confirm');
+  btn.disabled = true; btn.textContent = 'Sending…';
+  try{
+    await call('confirmTickets', {submissionId, points: clean, transcript, language: lang});
+    scSent(clean.length);
+  }catch(err){ scError(err.message, ()=>scReview()); }
+}
+
+async function approve(){
+  try{ await call('approve', {}); scApproved(); }
+  catch(err){ scError(err.message, ()=>scIdle()); }
+}
+
+/* ───────── boot ───────── */
+(async function(){
+  if(!CID || !TOK){ app.innerHTML = `<div class="center" style="padding-top:60px"><h2>This link is incomplete.</h2>
+    <p class="lead">Ask your Influidity contact to send it again.</p></div>`; return; }
+  document.getElementById('band-id').textContent = CID;
+  try{
+    const r = await call('getCollateral', {});
+    piece = r.collateral;
+    if(piece.status === 'Approved'){ scApproved(); return; }
+    if(piece.status === 'Archived'){
+      app.innerHTML = `<div class="center" style="padding-top:60px"><h2>A newer version has been sent.</h2>
+      <p class="lead">Please use the most recent link your team shared. If you can't find it, ask them to resend — it takes a second.</p></div>`;
+      return;
+    }
+    scIdle(piece.openTickets > 0
+      ? `<b>You've already sent ${piece.openTickets} change${piece.openTickets===1?'':'s'} on this piece.</b> Anything you add now goes to the team as well.`
+      : '');
+  }catch(err){ scError(err.message || 'This link is no longer valid.'); }
+})();
+</script>
+</body>
+</html>
