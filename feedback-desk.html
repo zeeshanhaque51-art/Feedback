@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feedback Desk — Influidity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#00B9BB; --teal-deep:#00888A; --teal-soft:#E1F5F5; --teal-hair:#9DE0E1;
+  --ink:#1C0B2A; --shell:#F4F4F3; --surface:#FFFFFF; --raised:#FAFAF9;
+  --body:#5C5A63; --muted:#8F8C96; --border:#DEDDDA; --hair:#EDECEA;
+  --amber:#8A5A00; --violet:#6A3FB0; --green:#0E7A55; --slate:#78757F; --red:#BF2C1E;
+  --sans:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--sans);font-size:13px;line-height:1.45;color:var(--ink);
+  background:var(--shell);-webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
+.num{font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{letter-spacing:-0.025em;font-weight:600}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer;background:none;border:none}
+a{color:var(--teal-deep);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus{outline:none}
+:focus-visible{outline:none;border-color:var(--teal)!important;box-shadow:0 0 0 3px var(--teal-soft)!important;z-index:5;position:relative}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- micro type ---------- */
+.eyebrow{font-size:8.5px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--muted)}
+.micro{font-size:9px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--muted);display:block;margin-bottom:6px}
+.sub{color:var(--body);font-size:12.5px}
+.muted{color:var(--muted)}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 16px;border-radius:999px;font-size:12.5px;font-weight:600;letter-spacing:-0.01em;border:1px solid transparent;transition:background .14s,border-color .14s,opacity .14s;white-space:nowrap}
+.btn .dot{width:7px;height:7px;border-radius:50%;flex:none}
+.btn-ink{background:var(--ink);color:#fff}
+.btn-ink .dot{background:#fff}
+.btn-ink:hover{background:#2c1442}
+.btn-teal{background:var(--teal);color:var(--ink)}
+.btn-teal .dot{background:var(--ink)}
+.btn-teal:hover{background:#00a6a8}
+.btn-ghost{background:var(--surface);border-color:var(--border);color:var(--ink)}
+.btn-ghost:hover{background:var(--raised);border-color:var(--muted)}
+.btn-red{background:var(--red);color:#fff}.btn-red .dot{background:#fff}
+.btn-sm{height:26px;padding:0 12px;font-size:11.5px}
+.btn-lg{height:40px;padding:0 22px;font-size:13.5px}
+.btn-full{width:100%}
+.btn:disabled,.btn[disabled]{opacity:.42;cursor:not-allowed}
+.btn-ghost:disabled{background:var(--raised)}
+
+/* ---------- chips / stamps ---------- */
+.chip{display:inline-flex;align-items:center;gap:7px;height:26px;padding:0 12px;border-radius:999px;border:1px solid var(--border);background:var(--surface);font-size:11.5px;font-weight:600;color:var(--body)}
+.chip:hover{border-color:var(--muted)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip.on .cnt{background:rgba(255,255,255,.22);color:#fff}
+.chip .cnt{background:var(--teal-soft);color:var(--teal-deep);border-radius:999px;padding:0 6px;font-size:9.5px;font-weight:700}
+.stamp{display:inline-flex;align-items:center;height:20px;padding:0 9px;border-radius:999px;border:1px solid currentColor;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;background:transparent;white-space:nowrap}
+.s-open,.s-awaiting{color:var(--amber)}
+.s-progress,.s-received{color:var(--teal-deep)}
+.s-revision{color:var(--violet)}
+.s-done,.s-approved,.s-active{color:var(--green)}
+.s-rejected,.s-archived,.s-paused{color:var(--slate)}
+.s-clar,.s-high{color:var(--red)}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:60;background:var(--ink);height:52px;display:flex;align-items:center;gap:22px;padding:0 20px}
+.brand{display:flex;align-items:center;gap:9px;flex:none}
+.brand .bdot{width:11px;height:11px;border-radius:50%;background:var(--teal)}
+.brand .bname{color:#fff;font-size:14px;font-weight:600;letter-spacing:-0.03em}
+.brand .btag{font-size:8.5px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:rgba(255,255,255,.42)}
+.tabs{display:flex;align-items:center;gap:2px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{display:flex;align-items:center;gap:7px;height:52px;padding:0 13px;color:rgba(255,255,255,.62);font-size:12.5px;font-weight:500;border-bottom:2.5px solid transparent;white-space:nowrap}
+.tab:hover{color:#fff}
+.tab.active{color:#fff;font-weight:600;border-bottom-color:var(--teal)}
+.tab .tcnt{font-family:var(--mono);font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:999px;background:rgba(255,255,255,.14);color:rgba(255,255,255,.72)}
+.tab.active .tcnt{background:var(--teal);color:var(--ink)}
+.bar-right{display:flex;align-items:center;gap:8px;flex:none}
+.tchip{display:inline-flex;align-items:center;gap:7px;height:27px;padding:0 12px;border-radius:999px;font-size:11.5px;font-weight:600;border:1px solid rgba(255,255,255,.22);color:rgba(255,255,255,.86)}
+.tchip:hover{background:rgba(255,255,255,.08)}
+.tchip.live{border-color:var(--teal);color:var(--teal)}
+.tchip .eid{font-family:var(--mono);font-size:10px;opacity:.5}
+
+/* ---------- kpi band ---------- */
+.kpi{position:sticky;top:52px;z-index:55;display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-bottom:1px solid var(--border)}
+.kpi-tile{text-align:left;padding:12px 20px;border-right:1px solid var(--hair);transition:background .14s}
+.kpi-tile:last-child{border-right:none}
+.kpi-tile:hover{background:var(--raised)}
+.kpi-tile .kn{font-size:21px;font-weight:600;color:var(--teal-deep);letter-spacing:-0.03em;line-height:1.1}
+.kpi-tile .kn.hot{color:var(--red)}
+.kpi-tile .kl{font-size:8.5px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--muted);margin-top:3px}
+
+/* ---------- layout ---------- */
+.wrap{max-width:1360px;margin:0 auto;padding:22px 20px 70px}
+.page-head{margin-bottom:16px}
+.page-head h1{font-size:18px;letter-spacing:-0.03em}
+.page-head p{font-size:12.5px;color:var(--muted);margin-top:2px}
+.head-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:9px}
+.panel-head{padding:12px 16px;border-bottom:1px solid var(--hair);background:var(--raised);border-radius:9px 9px 0 0;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.panel-head h3{font-size:12.5px;font-weight:600}
+.panel-body{padding:16px}
+.grid2{display:grid;gap:16px;align-items:start}
+
+/* ---------- forms ---------- */
+.field{margin-bottom:14px}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+input[type=text],input[type=email],input[type=number],input[type=date],input[type=tel],select,textarea{
+  width:100%;height:34px;padding:0 11px;border:1px solid var(--border);border-radius:7px;background:var(--surface);font-size:12.5px;transition:border-color .14s,box-shadow .14s}
+textarea{height:auto;padding:9px 11px;line-height:1.5;resize:vertical}
+select{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'><path d='M1 1l4 4 4-4' stroke='%238F8C96' stroke-width='1.4' stroke-linecap='round'/></svg>");background-repeat:no-repeat;background-position:right 11px center;padding-right:28px}
+input::placeholder,textarea::placeholder{color:#b6b3bb}
+input:disabled,select:disabled,textarea:disabled{background:var(--raised);color:var(--muted);cursor:not-allowed}
+.label-row{display:flex;align-items:baseline;gap:7px;margin-bottom:6px}
+.label-row .micro{margin:0}
+.opt-tag{font-size:9.5px;color:var(--muted);text-transform:lowercase;letter-spacing:0}
+.hint{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.45}
+.err{font-size:11.5px;font-weight:600;color:var(--red);margin-top:8px;display:flex;gap:6px}
+.err::before{content:'—'}
+.inp-err{border-color:var(--red)!important}
+.check{display:flex;align-items:center;gap:9px;font-size:12.5px}
+.check input{width:15px;height:15px;accent-color:var(--teal-deep);flex:none}
+
+/* ---------- toolbar ---------- */
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.tb-search{flex:1 1 200px;min-width:160px;max-width:320px}
+.tb-search input{height:30px;border-radius:999px;padding:0 14px;font-size:12px}
+.tb-sel{height:30px;border-radius:999px;padding:0 26px 0 13px;font-size:12px;width:auto;min-width:auto;background-color:var(--surface)}
+.tb-sel.on{background-color:var(--ink);color:#fff;border-color:var(--ink);background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'><path d='M1 1l4 4 4-4' stroke='white' stroke-width='1.4' stroke-linecap='round'/></svg>")}
+.tb-date{height:30px;border-radius:999px;font-size:11.5px;width:132px;font-family:var(--mono)}
+
+/* ---------- tables ---------- */
+.tblwrap{background:var(--surface);border:1px solid var(--border);border-radius:9px;overflow:hidden}
+table.tbl{width:100%;border-collapse:collapse}
+.tbl thead th{position:sticky;top:117px;z-index:20;background:var(--raised);font-size:9px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--muted);text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);white-space:nowrap}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--hair);font-size:12.5px;vertical-align:middle}
+.tbl tbody tr:last-child td{border-bottom:none}
+.tbl tbody tr{transition:background .12s}
+.tbl tbody tr.clickable{cursor:pointer}
+.tbl tbody tr:hover{background:#F6FBFB}
+.tbl tbody tr.sel{background:var(--teal-soft)}
+.tbl td.t{font-weight:600}
+.tbl td .subline{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4}
+.cbx{width:15px;height:15px;accent-color:var(--teal-deep)}
+.selbar{display:flex;align-items:center;gap:10px;background:var(--ink);color:#fff;border-radius:9px;padding:8px 14px;margin-bottom:10px;flex-wrap:wrap}
+.selbar .n{font-size:12.5px;font-weight:600;margin-right:4px}
+.selbar select{height:28px;border-radius:999px;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.26);color:#fff;font-size:11.5px;width:auto;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'><path d='M1 1l4 4 4-4' stroke='white' stroke-width='1.4' stroke-linecap='round'/></svg>")}
+.selbar .btn-ghost{background:transparent;border-color:rgba(255,255,255,.3);color:#fff}
+.selbar .btn-ghost:hover{background:rgba(255,255,255,.1)}
+.grouprow td{background:var(--raised);font-size:11px;font-weight:600;color:var(--body);letter-spacing:-0.01em;padding:8px 12px}
+.cell-sel{border:1px solid transparent;background:transparent;height:26px;border-radius:6px;padding:0 22px 0 7px;font-size:11.5px;width:100%;background-position:right 6px center}
+.cell-sel:hover{border-color:var(--border);background-color:var(--surface)}
+.cell-inp{border:1px solid transparent;background:transparent;height:26px;padding:0 7px;font-size:11.5px;border-radius:6px;width:100%}
+.cell-inp:hover{border-color:var(--border);background-color:var(--surface)}
+.sel-stamp{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.empty{padding:40px 20px;text-align:center}
+.empty b{display:block;font-size:15px;font-weight:600;letter-spacing:-0.02em;margin-bottom:5px}
+.empty p{font-size:12.5px;color:var(--muted);max-width:340px;margin:0 auto 14px}
+.skel{height:11px;border-radius:3px;background:linear-gradient(90deg,var(--hair),#f7f6f4,var(--hair));background-size:200% 100%;animation:sh 1.3s linear infinite}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ---------- docket ---------- */
+.docket{position:relative;background:var(--teal);color:var(--ink);border-radius:14px;padding:22px;animation:rise .2s ease-out}
+@keyframes rise{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.docket::after{content:'';position:absolute;left:0;right:0;top:calc(50% - 1px);height:0;pointer-events:none}
+.docket .perf{height:1px;border-top:2px dotted rgba(28,11,42,.28);margin:16px -22px;position:relative}
+.docket .perf::before,.docket .perf::after{content:'';position:absolute;top:-9px;width:18px;height:18px;border-radius:50%;background:var(--shell)}
+.docket .perf::before{left:-9px}.docket .perf::after{right:-9px}
+.dk-eyebrow{font-size:8.5px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;opacity:.62}
+.dk-id{font-family:var(--mono);font-size:40px;font-weight:700;letter-spacing:-0.03em;line-height:1.05;margin-top:6px}
+.dk-rule{width:60px;height:2.5px;background:var(--ink);margin:10px 0 16px}
+.dk-dl{display:grid;grid-template-columns:auto 1fr;gap:7px 16px;font-size:12.5px}
+.dk-dl dt{font-size:9px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;opacity:.62;padding-top:2px}
+.dk-dl dd{font-weight:500}
+.dk-copy{background:rgba(255,255,255,.34);border-radius:8px;padding:9px 11px;margin-top:9px}
+.dk-copy .micro{color:rgba(28,11,42,.62);margin-bottom:4px}
+.dk-copy .val{font-family:var(--mono);font-size:11px;line-height:1.5;word-break:break-word;white-space:pre-wrap}
+.dk-copy .row{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.dk-btn{height:24px;padding:0 10px;border-radius:999px;border:1px solid rgba(28,11,42,.3);font-size:10.5px;font-weight:600;flex:none;background:rgba(255,255,255,.5)}
+.dk-btn:hover{background:#fff}
+.dk-warn{font-size:12px;font-weight:700;color:#7a1a10;margin-top:14px;line-height:1.45}
+.dk-actions{display:flex;gap:8px;margin-top:16px}
+.dk-actions .btn{flex:1}
+.dashed{border:1px dashed var(--border);border-radius:14px;padding:34px 24px;text-align:center;background:transparent}
+.dashed b{display:block;font-size:15px;font-weight:600;margin-bottom:5px}
+.dashed p{font-size:12.5px;color:var(--muted);max-width:300px;margin:0 auto}
+
+/* ---------- overlays ---------- */
+.scrim{position:fixed;inset:0;background:rgba(28,11,42,.42);z-index:100;animation:fade .14s}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:520px;max-width:100%;background:var(--shell);z-index:101;display:flex;flex-direction:column;box-shadow:-14px 0 40px rgba(28,11,42,.18);animation:slide .18s ease-out}
+@keyframes slide{from{transform:translateX(24px);opacity:.6}to{transform:none;opacity:1}}
+.drawer-head{height:52px;flex:none;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 16px}
+.drawer-body{overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:560px;max-width:calc(100% - 24px);max-height:calc(100% - 48px);background:var(--shell);border-radius:12px;z-index:101;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 60px rgba(28,11,42,.28);animation:pop .16s ease-out}
+.modal.sm{width:440px}
+@keyframes pop{from{opacity:0;transform:translate(-50%,-48%) scale(.98)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.modal-head{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex:none}
+.modal-head h3{font-size:14px}
+.modal-body{padding:18px;overflow-y:auto}
+.modal-foot{background:var(--surface);border-top:1px solid var(--border);padding:12px 18px;display:flex;justify-content:flex-end;gap:8px;flex:none}
+.x{width:28px;height:28px;border-radius:999px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:16px;line-height:1}
+.x:hover{background:var(--hair);color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:12.5px;font-weight:600;padding:10px 18px;border-radius:999px;z-index:200;box-shadow:0 10px 30px rgba(28,11,42,.3);animation:lift .18s ease-out}
+.toast.red{background:var(--red)}
+@keyframes lift{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:9px 18px;font-size:12.5px}
+.dl dt{font-size:9px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--muted);padding-top:2px}
+
+/* ---------- misc blocks ---------- */
+.chipset{display:flex;flex-wrap:wrap;gap:6px}
+.rmchip{display:inline-flex;align-items:center;gap:7px;height:26px;padding:0 6px 0 12px;border-radius:999px;border:1px solid var(--border);background:var(--surface);font-size:11.5px;font-weight:500}
+.rmchip button{color:var(--muted);width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px}
+.rmchip button:hover{background:var(--red);color:#fff}
+.spark{display:block}
+.bar-track{height:7px;background:var(--hair);border-radius:999px;overflow:hidden}
+.bar-fill{height:100%;background:var(--teal-deep);border-radius:999px}
+.listrow{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--hair)}
+.listrow:last-child{border-bottom:none}
+.listrow .grow{flex:1;min-width:0}
+.listrow .ttl{font-weight:600;font-size:12.5px;letter-spacing:-0.01em}
+.listrow .meta{font-size:11px;color:var(--muted);margin-top:2px}
+.minicard{border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:9px;padding:11px 13px;background:var(--surface)}
+.copybox{background:var(--raised);border:1px solid var(--border);border-radius:7px;padding:9px 11px;font-family:var(--mono);font-size:11px;word-break:break-all;display:flex;gap:10px;justify-content:space-between;align-items:flex-start}
+.vchain{display:flex;flex-direction:column;gap:0}
+.vlink{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--hair);font-size:12px}
+.vlink:last-child{border-bottom:none}
+.vnow{background:var(--teal-soft);margin:0 -16px;padding:9px 16px;border-bottom:1px solid var(--hair)}
+
+/* ---------- sign in ---------- */
+.signin{display:grid;grid-template-columns:52fr 48fr;min-height:100vh}
+.si-left{background:var(--teal);color:var(--ink);padding:56px;display:flex;flex-direction:column;justify-content:space-between}
+.si-left h2{font-size:45px;font-weight:700;letter-spacing:-0.03em;line-height:1.05;max-width:11ch}
+.si-left .lead{font-size:15px;font-weight:500;color:rgba(28,11,42,.76);margin-top:16px;max-width:36ch;line-height:1.5}
+.si-list{margin-top:30px}
+.si-list li{list-style:none;font-size:12.5px;font-weight:500;padding:11px 0;border-top:1px solid rgba(28,11,42,.22)}
+.si-right{background:var(--surface);display:flex;align-items:center;justify-content:center;padding:40px 24px}
+.si-form{width:100%;max-width:330px}
+.si-form h1{font-size:23px;letter-spacing:-0.025em}
+.foot-note{border-top:1px solid var(--hair);margin-top:20px;padding-top:14px;font-size:11.5px;color:var(--muted);line-height:1.5}
+.sandbox{background:var(--raised);border:1px solid var(--hair);border-radius:9px;padding:12px;margin-top:16px}
+.sandbox table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px}
+.sandbox td{padding:3px 0;color:var(--body)}
+.sandbox td:first-child{color:var(--ink);font-weight:700;width:44px}
+
+/* ---------- client-facing ---------- */
+.cli{min-height:100vh;background:var(--shell);display:flex;flex-direction:column;align-items:center}
+.cli-band{width:100%;background:var(--teal);color:var(--ink);padding:14px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cli-inner{width:100%;max-width:520px;padding:20px 20px 60px}
+.cli-hero{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.cli-art{height:190px;background:linear-gradient(135deg,#1C0B2A,#00888A);display:flex;align-items:flex-end;justify-content:space-between;padding:14px;color:#fff}
+.cli h2{font-size:22px;letter-spacing:-0.03em;line-height:1.25}
+.cli p.big{font-size:15px;color:var(--body);line-height:1.5}
+.rec{width:104px;height:104px;border-radius:50%;background:var(--teal);color:var(--ink);display:flex;align-items:center;justify-content:center;margin:0 auto;position:relative;border:none}
+.rec.on{animation:pulse 1.6s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,185,187,.55)}70%{box-shadow:0 0 0 26px rgba(0,185,187,0)}100%{box-shadow:0 0 0 0 rgba(0,185,187,0)}}
+.wave{display:flex;align-items:center;justify-content:center;gap:3px;height:34px;margin-top:18px}
+.wave i{width:3px;background:var(--teal-deep);border-radius:2px;animation:wv .9s ease-in-out infinite}
+@keyframes wv{0%,100%{height:6px}50%{height:30px}}
+.pt-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start}
+.pt-idx{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--muted);padding-top:9px}
+.protostates{margin-top:26px;padding-top:14px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+
+/* ---------- component sheet ---------- */
+.spec{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.spec .panel-body{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .grid2{grid-template-columns:1fr!important}
+  .signin{grid-template-columns:1fr}
+  .si-left{padding:26px}
+  .si-left h2{font-size:32px}
+  .si-list,.si-left .lead{display:none}
+  .drawer{width:100%;top:auto;height:92vh;border-radius:14px 14px 0 0;animation:sheet .2s ease-out}
+  @keyframes sheet{from{transform:translateY(30px)}to{transform:none}}
+  .modal{width:calc(100% - 16px);border-radius:14px}
+}
+@media (max-width:760px){
+  .topbar{height:auto;flex-wrap:wrap;padding:10px 14px;gap:10px;position:static}
+  .brand{order:1}.bar-right{order:2;margin-left:auto}
+  .tabs{order:3;flex-basis:100%;border-top:1px solid rgba(255,255,255,.12)}
+  .tab{height:42px;padding:0 11px}
+  .kpi{grid-template-columns:1fr 1fr;position:static}
+  .kpi-tile{border-bottom:1px solid var(--hair)}
+  .kpi-tile:nth-child(2){border-right:none}
+  .wrap{padding:16px 14px 60px}
+  .tblwrap{border:none;background:transparent;border-radius:0}
+  .tbl,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}
+  .tbl thead{display:none}
+  .tbl tbody tr{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:9px;margin-bottom:9px;padding:6px 12px 8px}
+  .tbl tbody tr.sel{border-color:var(--teal);background:var(--teal-soft)}
+  .tbl td{border-bottom:1px solid var(--hair);padding:7px 0;display:flex;gap:12px;align-items:center;justify-content:space-between}
+  .tbl td:last-child{border-bottom:none}
+  .tbl td::before{content:attr(data-label);font-size:8.5px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--muted);flex:none}
+  .tbl td.wide{display:block}
+  .tbl td.wide::before{display:block;margin-bottom:4px}
+  .tbl td.cbxcell{position:absolute;top:8px;right:10px;width:auto;border:none;padding:0}
+  .tbl td.cbxcell::before{display:none}
+  .tbl tbody tr.grouprow{background:var(--raised);border-color:var(--hair);padding:8px 12px}
+  .tbl tr.grouprow td{border:none;padding:0;display:block}
+  .tbl tr.grouprow td::before{display:none}
+  .cell-sel,.cell-inp{border-color:var(--border);background:var(--surface);max-width:60%}
+  .f-row{grid-template-columns:1fr}
+  .toolbar{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+  .toolbar::-webkit-scrollbar{display:none}
+  .tb-search{flex:none;width:190px}
+  .dk-actions{flex-direction:column}
+  .cli-inner{padding:16px 16px 50px}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="overlay"></div>
+<div id="toastwrap"></div>
+<script>
+/* ============ DATA ============ */
+const PEOPLE = [
+  {id:'001', name:'Ashutosh', email:'you@influidity.com', role:'Admin'},
+  {id:'022', name:'Jitendra', email:'jitendra@influidity.com', role:'Admin'},
+  {id:'054', name:'Diptimayee', email:'diptimayee@influidity.com', role:'Member'},
+  {id:'100', name:'Zeeshan', email:'zeeshan@influidity.com', role:'Member'}
+];
+const CLIENTS = [
+  {prefix:'DVN', name:'Dvine H2O', contact:'Amiya Patnaik', phone:'919900000004', sent:4, open:0, avg:'2.0d', active:false},
+  {prefix:'KES', name:'Keshav Jewellers', contact:'Nirmal Keshav', phone:'919900000003', sent:6, open:2, avg:'1.8d', active:true},
+  {prefix:'MTR', name:'Metro Greens', contact:'Pravat Sahu', phone:'919900000005', sent:2, open:2, avg:'—', active:true},
+  {prefix:'ORC', name:'Orchid Hospitality', contact:'—', phone:'—', sent:0, open:0, avg:'—', active:true},
+  {prefix:'SAS', name:'Saswat Riverside', contact:'Sujata Mohanty', phone:'919900000002', sent:9, open:7, avg:'3.1d', active:true},
+  {prefix:'VUM', name:'Vumee Infra', contact:'Rakesh Nayak', phone:'919900000001', sent:12, open:0, avg:'2.4d', active:true}
+];
+const COLLATERALS = [
+  {id:'VUM-0416', title:'Launch teaser — hoarding', client:'Vumee Infra', type:'Creative', ver:2, status:'Awaiting feedback', by:'Diptimayee', bid:'054', sent:'26 Aug 26', open:0, revises:'VUM-0408', token:'k7m2pq4z'},
+  {id:'SAS-0410', title:'Riverside brochure — 8pp', client:'Saswat Riverside', type:'Brochure', ver:1, status:'Feedback received', by:'Jitendra', bid:'022', sent:'17 Aug 26', open:4, revises:null, token:'p3x9tt1a'},
+  {id:'KES-0409', title:'Festive necklace set — carousel', client:'Keshav Jewellers', type:'Social post', ver:3, status:'In revision', by:'Diptimayee', bid:'054', sent:'15 Aug 26', open:2, revises:'KES-0406', token:'w8n4rr2b'},
+  {id:'MTR-0404', title:'Site hoarding — north gate', client:'Metro Greens', type:'Site branding', ver:1, status:'Feedback received', by:'Jitendra', bid:'022', sent:'08 Aug 26', open:2, revises:null, token:'q2v6yy7c'},
+  {id:'SAS-0403', title:'Walkthrough film — 45s cut', client:'Saswat Riverside', type:'Video cut', ver:2, status:'In revision', by:'Zeeshan', bid:'100', sent:'05 Aug 26', open:3, revises:'SAS-0396', token:'z5h1kk9d'},
+  {id:'VUM-0408', title:'Launch teaser — hoarding', client:'Vumee Infra', type:'Creative', ver:1, status:'Archived', by:'Diptimayee', bid:'054', sent:'12 Aug 26', open:0, revises:null, token:'a1b2cc3e'},
+  {id:'DVN-0405', title:'Dispenser range — product deck', client:'Dvine H2O', type:'Presentation', ver:2, status:'Approved', by:'Zeeshan', bid:'100', sent:'09 Aug 26', open:0, revises:'DVN-0400', token:'m9j3ss5f'},
+  {id:'KES-0401', title:'Store launch invite', client:'Keshav Jewellers', type:'Creative', ver:1, status:'Approved', by:'Diptimayee', bid:'054', sent:'02 Aug 26', open:0, revises:null, token:'r4d8ww6g'},
+  {id:'DVN-0399', title:'Bottle label — 1L', client:'Dvine H2O', type:'Creative', ver:1, status:'Awaiting feedback', by:'Zeeshan', bid:'100', sent:'31 Jul 26', open:0, revises:null, token:'t6f2zz8h'},
+  {id:'MTR-0398', title:'Brand primer', client:'Metro Greens', type:'Presentation', ver:1, status:'Archived', by:'Jitendra', bid:'022', sent:'28 Jul 26', open:0, revises:null, token:'c3g7vv4j'}
+];
+const TICKETS = [
+  {id:'T-0012', change:'Swap the cover image for the drone shot', coll:'SAS-0410', area:'Imagery', pri:'High', status:'Open', who:'Jitendra', note:'', age:'2d', src:'Voice · confirmed', logged:'Diptimayee'},
+  {id:'T-0011', change:'Make the logo larger in the top right', coll:'SAS-0410', area:'Branding', pri:'Normal', status:'In progress', who:'Diptimayee', note:'Using the 2024 mark', age:'2d', src:'Voice · confirmed', logged:'Diptimayee'},
+  {id:'T-0010', change:'Set the tagline in sentence case', coll:'SAS-0410', area:'Copy', pri:'Normal', status:'Open', who:'Unassigned', note:'', age:'2d', src:'Voice · confirmed', logged:'Diptimayee'},
+  {id:'T-0009', change:'Remove the launch price from page 3', coll:'SAS-0410', area:'Pricing', pri:'High', status:'Needs clarification', who:'Jitendra', note:'Which price — 42L or 48L?', age:'3d', src:'Phone · unconfirmed', logged:'Jitendra'},
+  {id:'T-0008', change:'Use the new sales number on the back cover', coll:'MTR-0404', area:'Contact info', pri:'High', status:'Open', who:'Zeeshan', note:'', age:'5d', src:'Typed · confirmed', logged:'Zeeshan'},
+  {id:'T-0007', change:'Move the QR code below the address block', coll:'MTR-0404', area:'Layout', pri:'Normal', status:'In progress', who:'Zeeshan', note:'', age:'5d', src:'Typed · confirmed', logged:'Zeeshan'},
+  {id:'T-0006', change:'Add the RERA number in the footer', coll:'SAS-0403', area:'Legal', pri:'High', status:'Open', who:'Diptimayee', note:'Legal sent it on Friday', age:'7d', src:'Voice · confirmed', logged:'Diptimayee'},
+  {id:'T-0005', change:'Cut the drone opening to three seconds', coll:'SAS-0403', area:'Other', pri:'Normal', status:'In progress', who:'Zeeshan', note:'', age:'7d', src:'Voice · confirmed', logged:'Diptimayee'},
+  {id:'T-0004', change:'Warm the grade on the interior shots', coll:'SAS-0403', area:'Imagery', pri:'Normal', status:'Open', who:'Zeeshan', note:'', age:'9d', src:'Voice · confirmed', logged:'Diptimayee'},
+  {id:'T-0003', change:'Set the festive offer in gold, not white', coll:'KES-0409', area:'Branding', pri:'Normal', status:'Done', who:'Diptimayee', note:'', age:'11d', src:'Typed · confirmed', logged:'Diptimayee'},
+  {id:'T-0002', change:'Drop the second discount line', coll:'KES-0409', area:'Copy', pri:'Normal', status:'Rejected', who:'Diptimayee', note:'Client changed their mind', age:'11d', src:'Phone · unconfirmed', logged:'Jitendra'},
+  {id:'T-0001', change:'Align the price strip to the baseline', coll:'DVN-0405', area:'Layout', pri:'Normal', status:'Done', who:'Jitendra', note:'', age:'14d', src:'Typed · confirmed', logged:'Zeeshan'}
+];
+const AREAS = ['Copy','Layout','Imagery','Branding','Pricing','Contact info','Legal','Other'];
+const TYPES = ['Creative','Brochure','Social post','Site branding','Video cut','Presentation','Other'];
+const COLL_STATUS = ['Awaiting feedback','Feedback received','In revision','Approved','Archived'];
+const TIX_STATUS = ['Open','In progress','Needs clarification','Done','Rejected'];
+
+const STAMP = {
+  'Awaiting feedback':'s-awaiting','Feedback received':'s-received','In revision':'s-revision',
+  'Approved':'s-approved','Archived':'s-archived',
+  'Open':'s-open','In progress':'s-progress','Needs clarification':'s-clar','Done':'s-done','Rejected':'s-rejected',
+  'High':'s-high','Normal':'s-progress','Active':'s-active','Paused':'s-paused','Admin':'s-progress','Member':'s-archived'
+};
+
+/* ============ STATE ============ */
+const S = {
+  screen:'signin', user:PEOPLE[2], mode:'Demo data',
+  signinErr:false, signinLoading:false,
+  cFilter:{q:'',client:'',status:'',type:'',by:''}, cSel:[], cEmpty:false,
+  tFilter:{mine:false,client:'',coll:'',who:'',status:'',pri:'',area:''}, tSel:[], tGroup:false,
+  docket:null, docketWarn:false, docketNoNumber:false,
+  drawer:null, overlay:null, splitLines:[], splitRaw:'', ticketErr:false, ticketWords:0,
+  cliState:'idle', cliPoints:null
+};
+const $ = s => document.querySelector(s);
+const esc = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const stamp = v => `<span class="stamp ${STAMP[v]||''}">${esc(v)}</span>`;
+const coll = id => COLLATERALS.find(c=>c.id===id);
+const cliOf = name => CLIENTS.find(c=>c.name===name);
+const openTix = id => TICKETS.filter(t=>t.coll===id && ['Open','In progress','Needs clarification'].includes(t.status));
+
+/* ============ KPI ============ */
+function kpis(){
+  return [
+    {n:TICKETS.filter(t=>['Open','In progress','Needs clarification'].includes(t.status)).length, l:'Open tickets', go:()=>{S.tFilter={mine:false,client:'',coll:'',who:'',status:'Open',pri:'',area:''};go('tickets');}},
+    {n:TICKETS.filter(t=>t.pri==='High' && ['Open','In progress','Needs clarification'].includes(t.status)).length, l:'High priority open', hot:true, go:()=>{S.tFilter={mine:false,client:'',coll:'',who:'',status:'Open',pri:'High',area:''};go('tickets');}},
+    {n:COLLATERALS.filter(c=>c.status==='Awaiting feedback').length, l:'Awaiting feedback', go:()=>{S.cFilter={q:'',client:'',status:'Awaiting feedback',type:'',by:''};go('collaterals');}},
+    {n:TICKETS.filter(t=>t.status==='Done').length, l:'Closed this week', go:()=>{S.tFilter={mine:false,client:'',coll:'',who:'',status:'Done',pri:'',area:''};go('tickets');}}
+  ];
+}
+
+/* ============ SHELL ============ */
+function shell(active, body){
+  const k = kpis();
+  const tabs = [
+    ['overview','Overview',null],
+    ['send','Send',null],
+    ['collaterals','Collaterals',COLLATERALS.length],
+    ['tickets','Tickets',TICKETS.filter(t=>t.status!=='Done'&&t.status!=='Rejected').length],
+    ['clients','Clients',CLIENTS.length],
+    ['settings','Settings',null]
+  ];
+  return `
+  <header class="topbar">
+    <div class="brand"><span class="bdot"></span><span class="bname">Feedback&nbsp;Desk</span><span class="btag">Influidity</span></div>
+    <nav class="tabs">
+      ${tabs.map(([k2,l,c])=>`<button class="tab ${active===k2?'active':''}" data-go="${k2}">${l}${c!=null?`<span class="tcnt">${c}</span>`:''}</button>`).join('')}
+    </nav>
+    <div class="bar-right">
+      <button class="tchip ${S.mode==='Live · Sheets'?'live':''}" data-open="mode">${esc(S.mode)}</button>
+      <button class="tchip" data-open="account">${esc(S.user.name)} <span class="eid">#${S.user.id}</span></button>
+    </div>
+  </header>
+  <div class="kpi">
+    ${k.map((t,i)=>`<button class="kpi-tile" data-kpi="${i}"><div class="kn ${t.hot&&t.n>0?'hot':''}">${t.n}</div><div class="kl">${t.l}</div></button>`).join('')}
+  </div>
+  <main class="wrap">${body}</main>`;
+}
+
+function pageHead(title, sub, right){
+  return `<div class="page-head head-row"><div><h1>${title}</h1><p>${sub}</p></div>${right||''}</div>`;
+}
+function selOpts(arr, cur, ph){
+  return (ph?`<option value="">${ph}</option>`:'') + arr.map(o=>`<option ${o===cur?'selected':''}>${esc(o)}</option>`).join('');
+}
+function sparkline(vals, w, h){
+  const max = Math.max(...vals), min = Math.min(...vals);
+  const pts = vals.map((v,i)=>`${(i/(vals.length-1)*w).toFixed(1)},${(h-((v-min)/((max-min)||1))*(h-2)-1).toFixed(1)}`).join(' ');
+  return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="#00888A" stroke-width="1.4" stroke-linejoin="round"/></svg>`;
+}
+/* ============ 01 SIGN IN ============ */
+function scSignin(){
+  return `<div class="signin">
+    <div class="si-left">
+      <div class="brand"><span class="bdot" style="background:#1C0B2A"></span><span class="bname" style="color:#1C0B2A">Feedback&nbsp;Desk</span><span class="btag" style="color:rgba(28,11,42,.5)">Influidity</span></div>
+      <div>
+        <h2>Every piece gets an ID.</h2>
+        <p class="lead">Nothing leaves this desk untracked, and no change gets lost inside a paragraph on WhatsApp.</p>
+        <ul class="si-list">
+          <li>Register → ID + link in one tap</li>
+          <li>One change, one ticket, one owner</li>
+          <li>Google Sheets stays the source of truth</li>
+        </ul>
+      </div>
+    </div>
+    <div class="si-right"><div class="si-form">
+      <h1>Sign in</h1>
+      <p class="hint" style="margin:4px 0 20px;font-size:12.5px">Use the employee ID your team knows you by.</p>
+      <div class="field">
+        <span class="micro">Employee ID</span>
+        <input type="text" inputmode="numeric" class="mono ${S.signinErr?'inp-err':''}" id="si-id" placeholder="100" value="${S.signinErr?'022':''}">
+      </div>
+      <div class="field">
+        <span class="micro">Work email</span>
+        <input type="email" id="si-mail" placeholder="name@influidity.com" value="${S.signinErr?'diptimayee@influidity.com':''}">
+      </div>
+      ${S.signinErr?`<div class="err">Employee ID does not match diptimayee@influidity.com.</div>`:''}
+      <button class="btn btn-ink btn-full btn-lg" style="margin-top:16px" data-act="signin" ${S.signinLoading?'disabled':''}>${S.signinLoading?'Signing in…':'Continue'}<span class="dot"></span></button>
+      <p class="foot-note">Your name and employee ID are stamped on everything you register. Clients only ever see your name — employee IDs stay inside the sheet.</p>
+      <div class="sandbox">
+        <span class="micro">Sandbox sign-ins</span>
+        <table>${PEOPLE.map(p=>`<tr><td>${p.id}</td><td>${p.email}</td></tr>`).join('')}</table>
+      </div>
+    </div></div>
+  </div>`;
+}
+
+/* ============ 13 OVERVIEW ============ */
+function scOverview(){
+  const k = kpis();
+  const sparks = [[3,4,4,6,5,7,6,8,7,9,8,9,11,12],[0,1,1,2,1,2,3,2,3,3,4,3,4,4],[2,2,3,3,2,4,3,3,4,4,3,4,5,4],[1,2,3,3,5,6,6,8,9,9,11,12,13,14]];
+  const mine = TICKETS.filter(t=>t.who===S.user.name && ['Open','In progress','Needs clarification'].includes(t.status))
+    .sort((a,b)=>(b.pri==='High')-(a.pri==='High') || parseInt(b.age)-parseInt(a.age));
+  const waiting = COLLATERALS.filter(c=>c.status==='Awaiting feedback');
+  const recent = COLLATERALS.slice(0,5);
+  const perPerson = [['Diptimayee',7],['Zeeshan',5],['Jitendra',4],['Ashutosh',2]];
+  const maxP = 7;
+  return shell('overview', `
+    ${pageHead(`Good morning, ${esc(S.user.name)}.`,'Wednesday, 26 Aug 26 · here is what the desk owes people today.')}
+    <div class="kpi" style="position:static;border:1px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:16px">
+      ${k.map((t,i)=>`<button class="kpi-tile" data-kpi="${i}" style="padding:16px 20px">
+        <div class="kn ${t.hot&&t.n>0?'hot':''}" style="font-size:28px">${t.n}</div>
+        <div class="kl">${t.l}</div>
+        <div style="margin-top:10px">${sparkline(sparks[i],110,26)}</div>
+        <div class="eyebrow" style="margin-top:4px;font-size:8px">Last 14 days</div>
+      </button>`).join('')}
+    </div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr">
+      <section class="panel">
+        <div class="panel-head"><h3>Needs you today</h3><span class="eyebrow">${mine.length} open · oldest first</span></div>
+        ${mine.length?mine.map(t=>`<div class="listrow">
+          <span class="stamp ${STAMP[t.pri]}">${t.pri}</span>
+          <div class="grow"><div class="ttl">${esc(t.change)}</div><div class="meta"><span class="mono">${t.coll}</span> · ${esc(coll(t.coll).client)} · ${t.age} old</div></div>
+          <button class="btn btn-ghost btn-sm" data-act="markdone" data-id="${t.id}">Mark done</button>
+        </div>`).join(''):`<div class="empty"><b>Nothing assigned to you</b><p>Pick something off the board, or wait for the next round of feedback.</p></div>`}
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h3>Waiting on clients</h3><span class="eyebrow">Sent, no reply yet</span></div>
+        ${waiting.map(c=>`<div class="listrow">
+          <div class="grow"><div class="ttl">${esc(c.title)}</div><div class="meta"><span class="mono">${c.id}</span> · ${esc(c.client)} · sent ${c.sent}</div></div>
+          <button class="btn btn-ghost btn-sm" data-act="nudge" data-id="${c.id}">Nudge on WhatsApp</button>
+        </div>`).join('')}
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h3>Recently registered</h3></div>
+        <div class="panel-body" style="display:grid;gap:8px">
+          ${recent.map(c=>`<button class="minicard" style="text-align:left" data-drawer="${c.id}">
+            <div class="mono" style="font-size:11px;font-weight:700;color:var(--teal-deep)">${c.id}</div>
+            <div style="font-weight:600;margin-top:2px">${esc(c.title)}</div>
+            <div class="meta muted" style="font-size:11px">${esc(c.client)} · v${c.ver}</div>
+          </button>`).join('')}
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h3>This week</h3><span class="eyebrow">Tickets closed per person</span></div>
+        <div class="panel-body">
+          ${perPerson.map(([n,v])=>`<div style="margin-bottom:11px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span>${n}</span><span class="mono muted">${v}</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:${v/maxP*100}%"></div></div>
+          </div>`).join('')}
+          <div style="border-top:1px solid var(--hair);margin-top:14px;padding-top:12px">
+            <span class="micro">Average close time by client</span>
+            <div class="dl">${CLIENTS.filter(c=>c.avg!=='—').map(c=>`<dt>${esc(c.prefix)}</dt><dd class="mono">${c.avg}</dd>`).join('')}</div>
+          </div>
+        </div>
+      </section>
+    </div>`);
+}
+
+/* ============ 02 SEND ============ */
+function scSend(){
+  const d = S.docket;
+  const right = d ? `
+    <div class="docket">
+      <div class="dk-eyebrow">Collateral registered</div>
+      <div class="dk-id">${d.id}</div>
+      <div class="dk-rule"></div>
+      <dl class="dk-dl">
+        <dt>Client</dt><dd>${esc(d.client)}</dd>
+        <dt>Piece</dt><dd>${esc(d.title)} · ${esc(d.type)} · v${d.ver}</dd>
+        ${d.revises?`<dt>Revises</dt><dd class="mono">${d.revises}</dd>`:''}
+        <dt>Sent by</dt><dd>${esc(d.by)} <span class="mono" style="opacity:.62">#${d.bid}</span></dd>
+        <dt>Stamped</dt><dd class="mono">${d.sent} · 15:42</dd>
+      </dl>
+      <div class="perf"></div>
+      <div class="dk-copy"><div class="row"><div><span class="micro">Rename the file to this</span><div class="val">${d.file}</div></div><button class="dk-btn" data-act="copy" data-val="${esc(d.file)}">Copy</button></div></div>
+      <div class="dk-copy"><div class="row"><div><span class="micro">Feedback link</span><div class="val">${esc(d.link)}</div></div><button class="dk-btn" data-act="copy" data-val="${esc(d.link)}">Copy</button></div></div>
+      <div class="dk-copy"><div class="row"><div><span class="micro">WhatsApp message</span><div class="val">${esc(d.msg)}</div></div><button class="dk-btn" data-act="copy" data-val="${esc(d.msg)}">Copy</button></div></div>
+      ${S.docketWarn?`<div class="dk-warn">Set the feedback base URL in Settings — this link will not open yet.</div>`:''}
+      <div class="dk-actions">
+        <button class="btn btn-ghost" data-act="copy" data-val="${esc(d.msg)}">Copy message</button>
+        ${S.docketNoNumber
+          ? `<button class="btn btn-ink" disabled>No number on file<span class="dot"></span></button>`
+          : `<button class="btn btn-ink" data-act="whatsapp">Send on WhatsApp<span class="dot"></span></button>`}
+      </div>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">
+      <button class="chip ${S.docketWarn?'on':''}" data-act="tog-warn">Missing base URL variant</button>
+      <button class="chip ${S.docketNoNumber?'on':''}" data-act="tog-nonum">No number on file variant</button>
+      <button class="chip" data-act="clear-docket">Reset to empty state</button>
+    </div>`
+  : `<div class="dashed"><b>No docket yet</b><p>Fill the form and generate. The ID, the link and a copy-ready WhatsApp message appear here.</p></div>`;
+
+  return shell('send', `
+    ${pageHead('Send a collateral','Register the piece, get its ID and link, send it. Nothing leaves here untracked.')}
+    <div class="grid2" style="grid-template-columns:370px minmax(0,640px)">
+      <section class="panel">
+        <div class="panel-head"><h3>New collateral</h3></div>
+        <div class="panel-body">
+          <div class="field"><span class="micro">Client</span>
+            <select id="sd-client">${selOpts(CLIENTS.filter(c=>c.active).map(c=>`${c.name} · ${c.prefix}`),'','Choose a client…')}</select></div>
+          <div class="field"><span class="micro">Title</span>
+            <input type="text" id="sd-title" placeholder="Hoarding creative — option 2"></div>
+          <div class="f-row">
+            <div class="field"><span class="micro">Type</span><select id="sd-type">${selOpts(TYPES,'Creative')}</select></div>
+            <div class="field"><span class="micro">Revision of</span>
+              <select id="sd-rev"><option>Not a revision</option>${COLLATERALS.filter(c=>c.client==='Vumee Infra').map(c=>`<option>${c.id} · v${c.ver} · ${esc(c.title)}</option>`).join('')}</select></div>
+          </div>
+          <div class="field">
+            <div class="label-row"><span class="micro">File link</span><span class="opt-tag">optional</span></div>
+            <input type="text" id="sd-file" placeholder="https://drive.google.com/…">
+          </div>
+          <button class="btn btn-teal btn-full btn-lg" data-act="generate">Generate ID &amp; link<span class="dot"></span></button>
+          <p class="hint">Running number is global, so two people generating at once can never collide.</p>
+        </div>
+      </section>
+      <div>${right}</div>
+    </div>`);
+}
+
+/* ============ 03 COLLATERALS ============ */
+function filteredColl(){
+  const f = S.cFilter;
+  return COLLATERALS.filter(c =>
+    (!f.q || (c.id+' '+c.title).toLowerCase().includes(f.q.toLowerCase())) &&
+    (!f.client || c.client===f.client) && (!f.status || c.status===f.status) &&
+    (!f.type || c.type===f.type) && (!f.by || c.by===f.by));
+}
+function scCollaterals(){
+  const rows = S.cEmpty ? [] : filteredColl();
+  const f = S.cFilter, on = v => v?'on':'';
+  const anyFilter = f.q||f.client||f.status||f.type||f.by;
+  return shell('collaterals', `
+    ${pageHead('Collaterals','Everything we have sent out, newest first.')}
+    <div class="toolbar">
+      <div class="tb-search"><input type="text" placeholder="Search ID or title" value="${esc(f.q)}" data-filter="c:q"></div>
+      <select class="tb-sel ${on(f.client)}" data-filter="c:client">${selOpts(CLIENTS.map(c=>c.name),f.client,'All clients')}</select>
+      <select class="tb-sel ${on(f.status)}" data-filter="c:status">${selOpts(COLL_STATUS,f.status,'Any status')}</select>
+      <select class="tb-sel ${on(f.type)}" data-filter="c:type">${selOpts(TYPES,f.type,'Any type')}</select>
+      <select class="tb-sel ${on(f.by)}" data-filter="c:by">${selOpts(PEOPLE.map(p=>p.name),f.by,'Anyone')}</select>
+      <input type="date" class="tb-date" aria-label="Sent from">
+      <input type="date" class="tb-date" aria-label="Sent to">
+      <button class="chip ${anyFilter?'on':''}" data-act="clear-c">Clear</button>
+      <button class="chip ${S.cEmpty?'on':''}" data-act="tog-empty" style="margin-left:auto">Empty state</button>
+    </div>
+    ${S.cSel.length?`<div class="selbar">
+      <span class="n">${S.cSel.length} selected</span>
+      <select id="bulk-status">${selOpts(COLL_STATUS,'','Set status to…')}</select>
+      <button class="btn btn-teal btn-sm" data-act="bulk-apply">Apply<span class="dot"></span></button>
+      <button class="btn btn-ghost btn-sm" data-act="clear-sel">Clear</button>
+    </div>`:''}
+    <div class="tblwrap">
+      <table class="tbl">
+        <thead><tr>
+          <th style="width:34px"></th><th>ID</th><th>Title</th><th>Client</th><th>Type</th><th>Ver</th><th>Status</th><th>Sent by</th><th>Sent</th><th>Open</th>
+        </tr></thead>
+        <tbody>
+        ${rows.length?rows.map(c=>`<tr class="clickable ${S.cSel.includes(c.id)?'sel':''}" data-drawer="${c.id}">
+          <td class="cbxcell"><input type="checkbox" class="cbx" data-sel="${c.id}" ${S.cSel.includes(c.id)?'checked':''} aria-label="Select ${c.id}"></td>
+          <td data-label="ID"><span class="mono" style="font-weight:600;color:var(--teal-deep)">${c.id}</span></td>
+          <td data-label="Title" class="t">${esc(c.title)}</td>
+          <td data-label="Client">${esc(c.client)}</td>
+          <td data-label="Type" class="muted">${esc(c.type)}</td>
+          <td data-label="Ver" class="mono">v${c.ver}</td>
+          <td data-label="Status">${stamp(c.status)}</td>
+          <td data-label="Sent by">${esc(c.by)}</td>
+          <td data-label="Sent" class="mono muted">${c.sent}</td>
+          <td data-label="Open" class="mono" style="font-weight:600">${c.open||'—'}</td>
+        </tr>`).join(''):`<tr><td colspan="10"><div class="empty"><b>Nothing matches</b><p>Loosen a filter, or send something new.</p><button class="btn btn-teal" data-go="send">Send a collateral<span class="dot"></span></button></div></td></tr>`}
+        </tbody>
+      </table>
+    </div>`);
+}
+
+/* ============ 05 TICKETS ============ */
+function filteredTix(){
+  const f = S.tFilter;
+  let r = TICKETS.filter(t =>
+    (!f.mine || t.who===S.user.name) &&
+    (!f.client || coll(t.coll).client===f.client) && (!f.coll || t.coll===f.coll) &&
+    (!f.who || t.who===f.who) && (!f.status || t.status===f.status) &&
+    (!f.pri || t.pri===f.pri) && (!f.area || t.area===f.area));
+  return r.sort((a,b)=>(b.pri==='High')-(a.pri==='High') || parseInt(b.age)-parseInt(a.age));
+}
+function tixRow(t){
+  const c = coll(t.coll);
+  return `<tr class="${S.tSel.includes(t.id)?'sel':''}">
+    <td class="cbxcell"><input type="checkbox" class="cbx" data-tsel="${t.id}" ${S.tSel.includes(t.id)?'checked':''} aria-label="Select ${t.id}"></td>
+    <td data-label="Ticket"><span class="mono" style="font-weight:600">${t.id}</span></td>
+    <td data-label="Change requested" class="wide"><div style="font-weight:600">${esc(t.change)}</div>
+      <div class="subline"><button class="mono" style="color:var(--teal-deep);font-weight:600" data-drawer="${t.coll}">${t.coll}</button> · ${esc(c.title)} · ${esc(t.src)} · logged by ${esc(t.logged)}</div></td>
+    <td data-label="Area"><select class="cell-sel" data-edit="area:${t.id}">${selOpts(AREAS,t.area)}</select></td>
+    <td data-label="Priority"><select class="cell-sel sel-stamp" style="color:${t.pri==='High'?'var(--red)':'var(--body)'}" data-edit="pri:${t.id}">${selOpts(['High','Normal'],t.pri)}</select></td>
+    <td data-label="Status"><select class="cell-sel sel-stamp" style="color:var(--${t.status==='Done'?'green':t.status==='Open'?'amber':t.status==='Needs clarification'?'red':t.status==='Rejected'?'slate':'teal-deep'})" data-edit="status:${t.id}">${selOpts(TIX_STATUS,t.status)}</select></td>
+    <td data-label="Assigned"><select class="cell-sel" data-edit="who:${t.id}">${selOpts(['Unassigned',...PEOPLE.map(p=>p.name)],t.who)}</select></td>
+    <td data-label="Notes"><input class="cell-inp" placeholder="Internal note" value="${esc(t.note)}" data-edit="note:${t.id}"></td>
+    <td data-label="Age" class="mono muted">${t.age}</td>
+  </tr>`;
+}
+function scTickets(){
+  const rows = filteredTix(), f = S.tFilter, on = v=>v?'on':'';
+  let bodyRows;
+  if(S.tGroup){
+    const groups = {};
+    rows.forEach(t=>{(groups[t.coll]=groups[t.coll]||[]).push(t)});
+    bodyRows = Object.keys(groups).map(id=>{
+      const c = coll(id);
+      return `<tr class="grouprow"><td colspan="9"><span class="mono" style="color:var(--teal-deep)">${id}</span> · ${esc(c.title)} · v${c.ver} · ${esc(c.client)} · ${groups[id].length} change${groups[id].length>1?'s':''}</td></tr>`
+        + groups[id].map(tixRow).join('');
+    }).join('');
+  } else bodyRows = rows.map(tixRow).join('');
+
+  return shell('tickets', `
+    ${pageHead('Tickets','One row, one change. High priority first, oldest first.',
+      `<button class="btn btn-ink" data-open="addticket">Add ticket<span class="dot"></span></button>`)}
+    <div class="toolbar">
+      <button class="chip ${on(f.mine)}" data-act="tog-mine">My open tickets</button>
+      <select class="tb-sel ${on(f.client)}" data-filter="t:client">${selOpts(CLIENTS.map(c=>c.name),f.client,'All clients')}</select>
+      <select class="tb-sel ${on(f.coll)}" data-filter="t:coll">${selOpts(COLLATERALS.map(c=>c.id),f.coll,'Any collateral')}</select>
+      <select class="tb-sel ${on(f.who)}" data-filter="t:who">${selOpts(['Unassigned',...PEOPLE.map(p=>p.name)],f.who,'Anyone')}</select>
+      <select class="tb-sel ${on(f.status)}" data-filter="t:status">${selOpts(TIX_STATUS,f.status,'Any status')}</select>
+      <select class="tb-sel ${on(f.pri)}" data-filter="t:pri">${selOpts(['High','Normal'],f.pri,'Any priority')}</select>
+      <select class="tb-sel ${on(f.area)}" data-filter="t:area">${selOpts(AREAS,f.area,'Any area')}</select>
+      <button class="chip ${on(S.tGroup)}" data-act="tog-group">Group by collateral</button>
+      <button class="chip" data-act="clear-t">Clear</button>
+    </div>
+    ${S.tSel.length?`<div class="selbar"><span class="n">${S.tSel.length} selected</span>
+      <button class="btn btn-teal btn-sm" data-act="tix-done">Mark done<span class="dot"></span></button>
+      <button class="btn btn-ghost btn-sm" data-act="clear-tsel">Clear</button></div>`:''}
+    <div class="tblwrap">
+      <table class="tbl">
+        <thead><tr><th style="width:34px"></th><th>Ticket</th><th style="min-width:280px">Change requested</th><th>Area</th><th>Priority</th><th>Status</th><th>Assigned</th><th>Notes</th><th>Age</th></tr></thead>
+        <tbody>${rows.length?bodyRows:`<tr><td colspan="9"><div class="empty"><b>Clear board</b><p>No tickets match. Add one if feedback came in by phone.</p><button class="btn btn-teal" data-open="addticket">Add ticket<span class="dot"></span></button></div></td></tr>`}</tbody>
+      </table>
+    </div>`);
+}
+
+/* ============ 06 CLIENTS ============ */
+function scClients(){
+  return shell('clients', `
+    ${pageHead('Clients','The registry. Prefixes are permanent once a collateral has used them.',
+      `<button class="btn btn-ink" data-open="client">Add client<span class="dot"></span></button>`)}
+    <div class="tblwrap">
+      <table class="tbl">
+        <thead><tr><th>Prefix</th><th>Client</th><th>Contact</th><th>Phone</th><th>Sent</th><th>Open</th><th>Avg close</th><th>Active</th><th></th></tr></thead>
+        <tbody>${CLIENTS.map(c=>`<tr>
+          <td data-label="Prefix"><span class="mono" style="font-weight:700">${c.prefix}</span></td>
+          <td data-label="Client" class="t">${esc(c.name)}</td>
+          <td data-label="Contact">${esc(c.contact)}</td>
+          <td data-label="Phone" class="mono muted">${c.phone}</td>
+          <td data-label="Sent" class="mono">${c.sent||'—'}</td>
+          <td data-label="Open" class="mono" style="font-weight:600">${c.open||'—'}</td>
+          <td data-label="Avg close" class="mono">${c.avg}</td>
+          <td data-label="Active">${stamp(c.active?'Active':'Paused')}</td>
+          <td data-label=""><button class="btn btn-ghost btn-sm" data-open="client" data-id="${c.prefix}">Edit</button></td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>`);
+}
+
+/* ============ 07 / 08 SETTINGS ============ */
+function scSettings(){
+  if(S.user.role!=='Admin'){
+    return shell('settings', `
+      ${pageHead('Settings','Admin only.')}
+      <section class="panel"><div class="panel-body" style="padding:56px 24px;text-align:center">
+        <b style="display:block;font-size:15px;font-weight:600;margin-bottom:6px">You are a Member</b>
+        <p class="muted" style="max-width:360px;margin:0 auto 16px;font-size:12.5px">Ask an admin to change the link URL, the message template or the lists.</p>
+        <button class="btn btn-ghost" data-act="contact-admin">Message an admin</button>
+      </div></section>
+      <div style="margin-top:12px" class="toolbar"><button class="chip" data-act="become-admin">View as admin</button><button class="chip" data-go="spec">Component sheet</button></div>`);
+  }
+  const tpl = `Hi {{contact_name}} — {{client_name}},\nSharing for your review — {{title}} ({{type}}). Ref: {{collateral_id}}.\nPlease put your feedback on this link. It is tied to this exact piece, so nothing gets mixed up:\n{{feedback_url}}\n— {{sent_by}}, Influidity`;
+  const preview = `Hi Rakesh Nayak — Vumee Infra,\nSharing for your review — Launch teaser — hoarding (Creative). Ref: VUM-0416.\nPlease put your feedback on this link. It is tied to this exact piece, so nothing gets mixed up:\nhttps://script.google.com/macros/s/AKfy…/exec?c=VUM-0416&t=k7m2pq4z\n— Diptimayee, Influidity`;
+  return shell('settings', `
+    ${pageHead('Settings','Link URL, message template, lists and people.')}
+    <div class="grid2" style="grid-template-columns:360px minmax(0,1fr)">
+      <div style="display:grid;gap:16px">
+        <section class="panel"><div class="panel-head"><h3>Feedback link</h3></div><div class="panel-body">
+          <span class="micro">Base URL of the client-facing deployment</span>
+          <input type="text" class="mono" style="font-size:11px" value="https://script.google.com/macros/s/AKfy…/exec">
+          <p class="hint">Every collateral link is this URL plus <span class="mono">?c={id}&amp;t={token}</span>. Changing it rewrites existing links; the IDs and tokens never change.</p>
+          <button class="btn btn-ghost btn-sm" style="margin-top:10px" data-act="saved">Save URL</button>
+        </div></section>
+        <section class="panel"><div class="panel-head"><h3>Ticket areas</h3></div><div class="panel-body">
+          <div class="chipset">${AREAS.map(a=>`<span class="rmchip">${a}<button aria-label="Remove ${a}">×</button></span>`).join('')}</div>
+          <div style="display:flex;gap:8px;margin-top:12px"><input type="text" placeholder="Add an area"><button class="btn btn-ghost btn-sm">Add</button></div>
+        </div></section>
+        <section class="panel"><div class="panel-head"><h3>Collateral types</h3></div><div class="panel-body">
+          <div class="chipset">${TYPES.map(a=>`<span class="rmchip">${a}<button aria-label="Remove ${a}">×</button></span>`).join('')}</div>
+          <div style="display:flex;gap:8px;margin-top:12px"><input type="text" placeholder="Add a type"><button class="btn btn-ghost btn-sm">Add</button></div>
+        </div></section>
+      </div>
+      <div style="display:grid;gap:16px">
+        <section class="panel"><div class="panel-head"><h3>WhatsApp message</h3></div><div class="panel-body">
+          <textarea class="mono" style="height:190px;font-size:11.5px">${esc(tpl)}</textarea>
+          <p class="hint">Placeholders: <span class="mono">{{contact_name}} {{client_name}} {{title}} {{type}} {{version}} {{collateral_id}} {{feedback_url}} {{file_link}} {{sent_by}}</span></p>
+          <div style="margin-top:12px;background:var(--raised);border:1px solid var(--hair);border-radius:7px;padding:11px">
+            <span class="micro">Live preview · VUM-0416</span>
+            <div style="font-size:12px;white-space:pre-wrap;line-height:1.5">${esc(preview)}</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="margin-top:12px" data-act="saved">Save message</button>
+        </div></section>
+        <section class="panel"><div class="panel-head"><h3>People</h3></div>
+          <table class="tbl"><thead><tr><th>Employee ID</th><th>Name</th><th>Email</th><th>Role</th><th></th></tr></thead>
+          <tbody>${PEOPLE.map(p=>`<tr>
+            <td data-label="Employee ID" class="mono" style="font-weight:600">${p.id}</td>
+            <td data-label="Name" class="t">${p.name}</td><td data-label="Email" class="muted">${p.email}</td>
+            <td data-label="Role">${stamp(p.role)}</td>
+            <td data-label=""><button class="btn btn-ghost btn-sm">Edit</button></td></tr>`).join('')}</tbody></table>
+          <div class="panel-body" style="border-top:1px solid var(--hair)">
+            <div class="f-row"><div class="field"><span class="micro">Employee ID</span><input class="mono" placeholder="101"></div>
+            <div class="field"><span class="micro">Display name</span><input placeholder="Name"></div></div>
+            <div class="field"><span class="micro">Work email</span><input placeholder="name@influidity.com"></div>
+            <div style="display:flex;gap:8px"><select style="max-width:160px">${selOpts(['Member','Admin'],'Member')}</select><button class="btn btn-ghost btn-sm" data-act="saved">Add or update</button></div>
+          </div>
+        </section>
+        <section class="panel"><div class="panel-head"><h3>Demo data</h3></div><div class="panel-body">
+          <p class="hint" style="margin:0 0 10px">Nothing here touches the live sheet. Resetting restores the sample clients, collaterals and tickets, and signs you out.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-ghost btn-sm" data-open="reset">Reset demo data</button>
+            <button class="btn btn-ghost btn-sm" data-go="spec">Component sheet</button>
+            <button class="chip" data-act="become-member">View as member</button>
+          </div>
+        </div></section>
+      </div>
+    </div>`);
+}
+/* ============ 04 COLLATERAL DRAWER ============ */
+function drawerHTML(id){
+  const c = coll(id); if(!c) return '';
+  const tix = TICKETS.filter(t=>t.coll===id);
+  const chain = COLLATERALS.filter(x=>x.title===c.title && x.client===c.client).sort((a,b)=>a.ver-b.ver);
+  const link = `https://script.google.com/macros/s/AKfy…/exec?c=${c.id}&t=${c.token}`;
+  return `<div class="scrim" data-act="close"></div>
+  <aside class="drawer" role="dialog" aria-label="${c.id}">
+    <div class="drawer-head"><span class="mono" style="font-size:14px;font-weight:700">${c.id}</span><button class="x" data-act="close" aria-label="Close">×</button></div>
+    <div class="drawer-body">
+      <section class="panel"><div class="panel-body">
+        <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start">
+          <div><h2 style="font-size:15px">${esc(c.title)}</h2>
+          <p class="muted" style="font-size:12px;margin-top:2px">${esc(c.client)} · ${esc(c.type)} · v${c.ver}</p></div>
+          ${stamp(c.status)}
+        </div>
+        <div class="dl" style="margin-top:16px">
+          <dt>Sent by</dt><dd>${esc(c.by)} <span class="mono muted">#${c.bid}</span></dd>
+          <dt>Sent</dt><dd class="mono">${c.sent}</dd>
+          <dt>Token</dt><dd class="mono">${c.token}</dd>
+          <dt>Open</dt><dd class="mono" style="font-weight:600">${openTix(c.id).length||'—'}</dd>
+        </div>
+        <div style="margin-top:14px"><span class="micro">Feedback link</span>
+          <div class="copybox"><span>${esc(link)}</span><button class="btn btn-ghost btn-sm" data-act="copy" data-val="${esc(link)}">Copy</button></div></div>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+          <button class="btn btn-teal btn-sm" data-act="openclient" data-id="${c.id}">Open as the client sees it<span class="dot"></span></button>
+          <button class="btn btn-ghost btn-sm" data-act="nudge" data-id="${c.id}">Nudge on WhatsApp</button>
+        </div>
+      </div></section>
+
+      <section class="panel"><div class="panel-head"><h3>Version chain</h3><span class="eyebrow">${chain.length} version${chain.length>1?'s':''}</span></div>
+        <div class="panel-body" style="padding-top:6px;padding-bottom:6px">
+          ${chain.map(v=>`<div class="vlink ${v.id===c.id?'vnow':''}">
+            <span class="mono" style="font-weight:600">v${v.ver}</span>
+            ${v.id===c.id?`<span class="mono">${v.id}</span><span class="eyebrow" style="margin-left:auto">Viewing</span>`
+              :`<button class="mono" style="color:var(--teal-deep);font-weight:600" data-drawer="${v.id}">${v.id}</button><span class="muted" style="margin-left:auto;font-size:11px">${v.sent}</span>`}
+          </div>`).join('')}
+        </div></section>
+
+      <section class="panel"><div class="panel-head"><h3>Tickets on this piece</h3>
+        <button class="btn btn-teal btn-sm" data-open="addticket">Add a ticket to this piece<span class="dot"></span></button></div>
+        ${tix.length?tix.map(t=>`<div class="listrow">
+          <span class="mono muted" style="font-size:11px">${t.id}</span>
+          <div class="grow"><div class="ttl">${esc(t.change)}</div><div class="meta">${esc(t.area)} · ${esc(t.who)} · ${t.age}</div></div>
+          ${stamp(t.status)}
+        </div>`).join(''):`<div class="empty" style="padding:26px 16px"><b>No changes yet</b><p>When the client sends feedback, every point lands here as its own ticket.</p></div>`}
+      </section>
+    </div>
+  </aside>`;
+}
+
+/* ============ 09/10/11/14 MODALS ============ */
+function modalHTML(kind){
+  const s = `<div class="scrim" data-act="close"></div>`;
+  if(kind==='addticket'){
+    const over = S.ticketWords>15;
+    return s+`<div class="modal" role="dialog" aria-label="Add a ticket">
+      <div class="modal-head"><h3>Add a ticket</h3><button class="x" data-act="close" aria-label="Close">×</button></div>
+      <div class="modal-body">
+        <div class="field"><span class="micro">Collateral</span>
+          <select id="mt-coll" class="${S.ticketErr?'inp-err':''}">${selOpts(COLLATERALS.filter(c=>c.status!=='Archived').map(c=>`${c.id} · ${c.client} · ${c.title}`),'','Pick the piece…')}</select></div>
+        <div class="field"><span class="micro">Change requested</span>
+          <textarea id="mt-change" style="height:76px" placeholder="Make the logo larger in the top right"></textarea>
+          <p class="hint" style="display:flex;justify-content:space-between"><span>One change per ticket, phrased as an instruction, under fifteen words.</span>
+          <span class="mono" id="mt-count" style="color:${over?'var(--amber)':'var(--muted)'};font-weight:700">${S.ticketWords}/15</span></p></div>
+        <div class="f-row">
+          <div class="field"><span class="micro">Area</span><select>${selOpts(AREAS,'Copy')}</select></div>
+          <div class="field"><span class="micro">Priority</span><select>${selOpts(['Normal','High'],'Normal')}</select></div>
+        </div>
+        <div class="field"><span class="micro">Assign to</span><select>${selOpts(['Unassigned',...PEOPLE.map(p=>p.name)],'Unassigned')}</select></div>
+        <label class="check"><input type="checkbox"> Client confirmed this on the call</label>
+        ${S.ticketErr?`<div class="err">Every ticket belongs to a collateral. Pick one.</div>`:''}
+      </div>
+      <div class="modal-foot"><button class="btn btn-ghost" data-act="close">Cancel</button>
+        <button class="btn btn-teal" data-act="save-ticket">Add ticket<span class="dot"></span></button></div>
+    </div>`;
+  }
+  if(kind==='split'){
+    return s+`<div class="modal" role="dialog" aria-label="That is more than one change">
+      <div class="modal-head"><h3>That is more than one change</h3><button class="x" data-act="close" aria-label="Close">×</button></div>
+      <div class="modal-body">
+        <p class="sub" style="margin-bottom:16px">A ticket has to be one atomic change, or the designer cannot tick it off. Here is a split — edit, drop or add lines, then save them as separate tickets.</p>
+        <div id="splitlist">${S.splitLines.map((l,i)=>`<div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
+          <span class="mono muted" style="width:12px;flex:none;font-size:11px">${i+1}</span>
+          <input type="text" value="${esc(l)}" data-split="${i}">
+          <button class="x" data-act="split-rm" data-i="${i}" aria-label="Remove line ${i+1}" style="flex:none">×</button>
+        </div>`).join('')}</div>
+        <button class="btn btn-ghost btn-sm" data-act="split-add">Add a line</button>
+        <div style="border-top:1px solid var(--border);margin-top:16px;padding-top:12px">
+          <details><summary class="micro" style="cursor:pointer;margin:0">What the client actually said</summary>
+            <p style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6">${esc(S.splitRaw)}</p></details>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn btn-ghost" data-open="addticket">Back</button>
+        <button class="btn btn-teal" data-act="save-split">Save as separate tickets<span class="dot"></span></button></div>
+    </div>`;
+  }
+  if(kind==='client'){
+    return s+`<div class="modal" role="dialog" aria-label="Edit client">
+      <div class="modal-head"><h3>Edit client</h3><button class="x" data-act="close" aria-label="Close">×</button></div>
+      <div class="modal-body">
+        <div class="field"><span class="micro">Client name</span><input type="text" value="Vumee Infra"></div>
+        <div class="f-row">
+          <div class="field"><span class="micro">Prefix — 3 letters</span>
+            <input type="text" class="mono" value="VUM" maxlength="3" disabled style="text-transform:uppercase">
+            <p class="hint">🔒 Locked — collaterals already carry this prefix.</p></div>
+          <div class="field"><span class="micro">Active</span><select>${selOpts(['Active','Paused'],'Active')}</select></div>
+        </div>
+        <div class="f-row">
+          <div class="field"><span class="micro">Approver name</span><input type="text" value="Rakesh Nayak"></div>
+          <div class="field"><span class="micro">WhatsApp number</span><input type="text" class="mono" value="919900000001" placeholder="91XXXXXXXXXX">
+            <p class="hint">Country code, no plus, no spaces.</p></div>
+        </div>
+        <div class="err">Prefix VUM already belongs to Vumee Infra. Pick another.</div>
+      </div>
+      <div class="modal-foot"><button class="btn btn-ghost" data-act="close">Cancel</button>
+        <button class="btn btn-teal" data-act="save-client">Save client<span class="dot"></span></button></div>
+    </div>`;
+  }
+  if(kind==='confirm'){
+    return s+`<div class="modal sm" role="dialog" aria-label="Approve with open tickets">
+      <div class="modal-head"><h3>Approve with 3 open tickets?</h3><button class="x" data-act="close" aria-label="Close">×</button></div>
+      <div class="modal-body"><p class="sub">Approving now leaves those changes unresolved on the board. Close or reject them first if the client has actually signed off.</p></div>
+      <div class="modal-foot"><button class="btn btn-ghost" data-act="close">Cancel</button>
+        <button class="btn btn-ink" data-act="approve-anyway">Approve anyway<span class="dot"></span></button></div>
+    </div>`;
+  }
+  if(kind==='reset'){
+    return s+`<div class="modal sm" role="dialog" aria-label="Reset demo data">
+      <div class="modal-head" style="background:#FDF2F1;border-bottom-color:#F3D3CF"><h3 style="color:var(--red)">Reset demo data?</h3><button class="x" data-act="close" aria-label="Close">×</button></div>
+      <div class="modal-body"><p class="sub">Every sample client, collateral and ticket goes back to how it started, and you are signed out. Nothing on the live sheet changes.</p></div>
+      <div class="modal-foot"><button class="btn btn-ghost" data-act="close">Cancel</button>
+        <button class="btn btn-red" data-act="reset">Reset demo data<span class="dot"></span></button></div>
+    </div>`;
+  }
+  if(kind==='mode'){
+    const live = S.mode==='Live · Sheets';
+    return s+`<div class="modal sm" role="dialog" aria-label="Data mode">
+      <div class="modal-head"><h3>${live?'Live on Google Sheets':'Demo data in this browser'}</h3><button class="x" data-act="close" aria-label="Close">×</button></div>
+      <div class="modal-body"><p class="sub">${live
+        ? 'Every read and write goes through Apps Script into the Feedback Desk DB spreadsheet. Open the sheet any time — it is plain text, no decoding needed.'
+        : 'Nothing you do here leaves the browser. Register, ticket and approve as much as you like — the sheet is untouched.'}</p>
+        <button class="chip" style="margin-top:14px" data-act="tog-mode">Switch to ${live?'demo data':'live sheets'}</button></div>
+      <div class="modal-foot"><button class="btn btn-ink" data-act="close">Got it<span class="dot"></span></button></div>
+    </div>`;
+  }
+  if(kind==='account'){
+    const u = S.user;
+    return s+`<div class="modal sm" role="dialog" aria-label="Account">
+      <div class="modal-head"><h3>Account</h3><button class="x" data-act="close" aria-label="Close">×</button></div>
+      <div class="modal-body">
+        <div class="dl"><dt>Name</dt><dd>${esc(u.name)}</dd><dt>Employee ID</dt><dd class="mono">${u.id}</dd>
+          <dt>Email</dt><dd>${esc(u.email)}</dd><dt>Role</dt><dd>${stamp(u.role)}</dd></div>
+        <p class="hint" style="margin-top:14px">Everything you register carries your name and employee ID. Clients see the name only.</p>
+      </div>
+      <div class="modal-foot"><button class="btn btn-ghost" data-act="close">Close</button>
+        <button class="btn btn-ink" data-act="signout">Sign out<span class="dot"></span></button></div>
+    </div>`;
+  }
+  return '';
+}
+
+/* ============ 12 CLIENT-FACING PAGE ============ */
+const CLI_POINTS = [
+  {t:'Swap the cover image for the drone shot', a:'Imagery'},
+  {t:'Make the logo larger in the top right', a:'Branding'},
+  {t:'Set the tagline in sentence case', a:'Copy'},
+  {t:'Remove the launch price from page 3', a:'Pricing'}
+];
+function scClient(){
+  const st = S.cliState;
+  const c = coll('VUM-0416');
+  const band = `<div class="cli-band"><span class="bdot" style="width:11px;height:11px;border-radius:50%;background:var(--ink)"></span>
+    <span style="font-weight:600;letter-spacing:-0.02em">Influidity</span>
+    <span class="mono" style="font-size:11px;opacity:.66">${c.id}</span>
+    <span style="margin-left:auto;font-size:12px;font-weight:500">${esc(c.title)}</span></div>`;
+  const states = `<div class="protostates"><span class="eyebrow" style="margin-right:4px">Prototype states</span>
+    ${['idle','listening','processing','review','sent','superseded','expired'].map(x=>`<button class="chip ${st===x?'on':''}" data-cli="${x}">${x}</button>`).join('')}
+    <button class="chip" data-go="send">Back to console</button></div>`;
+
+  if(st==='expired'){
+    return `<div class="cli">${band}<div class="cli-inner" style="padding-top:60px;text-align:center">
+      <h2>This link has expired.</h2>
+      <p class="big" style="margin-top:12px">Feedback links stay open until the piece is approved. Ask your Influidity contact to send a fresh one — it takes them a second.</p>
+      ${states}</div></div>`;
+  }
+  if(st==='sent'){
+    return `<div class="cli">${band}<div class="cli-inner" style="padding-top:44px;text-align:center">
+      <div style="width:56px;height:56px;border-radius:50%;background:var(--teal);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:26px">✓</div>
+      <h2>Thank you — that is logged.</h2>
+      <p class="big" style="margin-top:12px">We recorded <b>4 changes</b> against <span class="mono">${c.id}</span>. Your team has been notified and will send the next version here.</p>
+      ${states}</div></div>`;
+  }
+
+  const banner = st==='superseded' ? `<div style="background:var(--teal-soft);border:1px solid var(--teal-hair);border-radius:10px;padding:12px 14px;font-size:12.5px;margin-bottom:16px">
+    <b>A newer version of this piece has been sent.</b> Your feedback will still reach the team.</div>` : '';
+
+  return `<div class="cli">${band}<div class="cli-inner">
+    ${banner}
+    <div class="cli-hero">
+      <div class="cli-art"><span style="font-size:13px;font-weight:600">Launch teaser</span>
+        <span class="stamp" style="color:#fff;border-color:rgba(255,255,255,.5)">v${c.ver}</span></div>
+      <div style="padding:12px 14px;font-size:12px;color:var(--muted)">Sent by Diptimayee · 26 Aug 26</div>
+    </div>
+
+    ${st==='review' ? `
+      <div style="margin-top:26px">
+        <h2>Here's what we heard — 4 changes.</h2>
+        <p class="big" style="margin-top:8px">Edit anything that's not right, then send.</p>
+        <div style="display:grid;gap:9px;margin-top:18px">
+          ${CLI_POINTS.map((p,i)=>`<div class="pt-card">
+            <span class="pt-idx">${i+1}</span>
+            <div style="flex:1"><input type="text" value="${esc(p.t)}" style="height:30px;font-size:13px;border-color:transparent;padding-left:0">
+              <span class="stamp s-progress" style="margin-top:4px">${p.a}</span></div>
+            <button class="x" aria-label="Remove point ${i+1}">×</button></div>`).join('')}
+        </div>
+        <button class="btn btn-ghost btn-full" style="margin-top:12px">Add another point</button>
+        <button class="btn btn-teal btn-full btn-lg" style="margin-top:20px;height:46px" data-cli="sent">Send these changes<span class="dot"></span></button>
+        <button class="btn btn-ghost btn-full" style="margin-top:8px" data-cli="sent">I'm happy with this — approve</button>
+      </div>`
+    : `
+      <div style="margin-top:36px;text-align:center">
+        <h2>Tell us what you'd like changed.</h2>
+        <p class="big" style="margin-top:8px">Speak naturally — we'll split it into separate points for you.</p>
+        <button class="rec ${st==='listening'?'on':''}" style="margin-top:26px" data-cli="${st==='listening'?'processing':'listening'}" aria-label="${st==='listening'?'Stop recording':'Start recording'}">
+          ${st==='listening'
+            ? `<svg width="26" height="26" viewBox="0 0 26 26"><rect x="4" y="4" width="18" height="18" rx="3" fill="#1C0B2A"/></svg>`
+            : `<svg width="30" height="30" viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="11" rx="3" fill="#1C0B2A"/><path d="M5 11a7 7 0 0014 0M12 18v3" stroke="#1C0B2A" stroke-width="2" stroke-linecap="round"/></svg>`}
+        </button>
+        <div class="wave">${st==='listening'?Array.from({length:22},(_,i)=>`<i style="animation-delay:${(i%7)*0.09}s"></i>`).join(''):''}</div>
+        <p class="muted" style="font-size:12px;min-height:18px">${st==='listening'?'Listening…':st==='processing'?'Splitting what you said into separate points…':'Tap to start'}</p>
+      </div>
+      <div class="panel" style="margin-top:22px;min-height:110px">
+        <div class="panel-head"><h3>${st==='idle'?'Nothing yet':'What we are hearing'}</h3>
+          <button class="chip" data-cli="review">Type instead</button></div>
+        <div class="panel-body" style="font-size:14px;line-height:1.6;color:${st==='idle'?'var(--muted)':'var(--ink)'}">
+          ${st==='idle' ? 'Your words will appear here as you speak, so you can check we caught them.'
+            : st==='listening' ? 'make the logo bigger and change the tagline to sentence case and also remove the launch price<span style="opacity:.4">…</span>'
+            : 'Make the logo bigger and change the tagline to sentence case and also remove the launch price.'}
+        </div>
+      </div>`}
+    ${states}
+  </div></div>`;
+}
+
+/* ============ COMPONENT SHEET ============ */
+function scSpec(){
+  const btn = (c,l,extra)=>`<button class="btn ${c}" ${extra||''}>${l}${c.includes('ghost')?'':'<span class="dot"></span>'}</button>`;
+  return shell('settings',`
+    ${pageHead('Component sheet','Every part of Feedback Desk in one place, so nothing drifts.',`<button class="btn btn-ghost" data-go="settings">Back to settings</button>`)}
+    <div class="spec">
+      <section class="panel"><div class="panel-head"><h3>Buttons</h3></div><div class="panel-body">
+        ${btn('btn-ink','Ink primary')}${btn('btn-teal','Teal accent')}${btn('btn-ghost','Ghost')}
+        ${btn('btn-ink btn-sm','Small')}${btn('btn-ink','Disabled','disabled')}${btn('btn-red','Destructive')}
+      </div></section>
+      <section class="panel"><div class="panel-head"><h3>Chips</h3></div><div class="panel-body">
+        <span class="chip">Default</span><span class="chip on">Toggled on</span>
+        <span class="chip">With count <span class="cnt">4</span></span>
+        <span class="tchip live" style="color:var(--teal-deep);border-color:var(--teal)">Live · Sheets</span>
+      </div></section>
+      <section class="panel"><div class="panel-head"><h3>Status stamps</h3></div><div class="panel-body">
+        ${['Awaiting feedback','Feedback received','In revision','Approved','Archived','Open','In progress','Needs clarification','Done','Rejected','High','Active','Paused'].map(stamp).join('')}
+      </div></section>
+      <section class="panel"><div class="panel-head"><h3>Inputs</h3></div><div class="panel-body" style="display:block">
+        <div class="field"><span class="micro">Default</span><input placeholder="Placeholder"></div>
+        <div class="field"><span class="micro">Error</span><input class="inp-err" value="VUMM"><div class="err">Prefix must be exactly three letters.</div></div>
+        <div class="field"><span class="micro">Disabled</span><input value="Locked" disabled></div>
+        <div class="field"><span class="micro">In-cell select</span><select class="cell-sel" style="max-width:160px">${selOpts(AREAS,'Copy')}</select></div>
+        <div><span class="micro">Copy box</span><div class="copybox"><span>VUM-0416_launch-teaser-hoarding_v2</span><button class="btn btn-ghost btn-sm">Copy</button></div></div>
+      </div></section>
+      <section class="panel"><div class="panel-head"><h3>KPI tile</h3></div><div class="panel-body" style="padding:0">
+        <div class="kpi" style="position:static;border:none"><div class="kpi-tile"><div class="kn">9</div><div class="kl">Open tickets</div></div>
+        <div class="kpi-tile"><div class="kn hot">4</div><div class="kl">High priority open</div></div></div>
+      </div></section>
+      <section class="panel"><div class="panel-head"><h3>Loading</h3></div><div class="panel-body" style="display:block">
+        ${[70,90,50,80].map(w=>`<div class="skel" style="width:${w}%;margin-bottom:9px"></div>`).join('')}
+        <button class="btn btn-teal" disabled style="margin-top:6px">Generating…<span class="dot"></span></button>
+      </div></section>
+      <section class="panel"><div class="panel-head"><h3>Toast</h3></div><div class="panel-body">
+        <span class="toast" style="position:static;transform:none;animation:none">VUM-0416 registered</span>
+        <span class="toast red" style="position:static;transform:none;animation:none">Employee ID does not match.</span>
+        <button class="chip" data-act="demo-toast">Fire a toast</button>
+      </div></section>
+      <section class="panel"><div class="panel-head"><h3>Overlays</h3></div><div class="panel-body">
+        <button class="chip" data-drawer="SAS-0410">Drawer</button>
+        <button class="chip" data-open="addticket">Modal</button>
+        <button class="chip" data-open="split">Split modal</button>
+        <button class="chip" data-open="confirm">Confirmation</button>
+        <button class="chip" data-open="reset">Destructive</button>
+      </div></section>
+    </div>`);
+}
+
+/* ============ RENDER + EVENTS ============ */
+function render(){
+  const r = $('#root');
+  if(S.screen==='signin') r.innerHTML = scSignin();
+  else if(S.screen==='client') r.innerHTML = scClient();
+  else if(S.screen==='overview') r.innerHTML = scOverview();
+  else if(S.screen==='send') r.innerHTML = scSend();
+  else if(S.screen==='collaterals') r.innerHTML = scCollaterals();
+  else if(S.screen==='tickets') r.innerHTML = scTickets();
+  else if(S.screen==='clients') r.innerHTML = scClients();
+  else if(S.screen==='settings') r.innerHTML = scSettings();
+  else if(S.screen==='spec') r.innerHTML = scSpec();
+  $('#overlay').innerHTML = S.drawer ? drawerHTML(S.drawer) : (S.overlay ? modalHTML(S.overlay) : '');
+  document.body.style.overflow = (S.drawer||S.overlay) ? 'hidden' : '';
+}
+function go(s){ S.screen=s; S.drawer=null; S.overlay=null; window.scrollTo(0,0); render(); }
+let toastTimer;
+function toast(msg, red){
+  $('#toastwrap').innerHTML = `<div class="toast ${red?'red':''}" role="status">${esc(msg)}</div>`;
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>{$('#toastwrap').innerHTML='';}, 2600);
+}
+const SPLIT_RAW = 'make the logo bigger and change the tagline to sentence case and also remove the launch price';
+
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-go],[data-act],[data-open],[data-drawer],[data-kpi],[data-sel],[data-tsel],[data-cli]');
+  if(!t) return;
+  const d = t.dataset;
+
+  if(d.sel!==undefined && t.tagName==='INPUT'){ e.stopPropagation();
+    S.cSel = t.checked ? [...S.cSel,d.sel] : S.cSel.filter(x=>x!==d.sel); render(); return; }
+  if(d.tsel!==undefined && t.tagName==='INPUT'){ e.stopPropagation();
+    S.tSel = t.checked ? [...S.tSel,d.tsel] : S.tSel.filter(x=>x!==d.tsel); render(); return; }
+  if(d.go){ go(d.go); return; }
+  if(d.kpi!==undefined){ kpis()[+d.kpi].go(); return; }
+  if(d.drawer){ e.stopPropagation(); S.overlay=null; S.drawer=d.drawer; render(); return; }
+  if(d.open){ S.drawer=null; S.overlay=d.open;
+    if(d.open==='split'){ S.splitLines=['Make the logo bigger','Set the tagline in sentence case','Remove the launch price']; S.splitRaw=SPLIT_RAW; }
+    render(); return; }
+  if(d.cli){ S.cliState=d.cli; render();
+    if(d.cli==='processing') setTimeout(()=>{ if(S.cliState==='processing'){ S.cliState='review'; render(); } }, 1400);
+    return; }
+
+  switch(d.act){
+    case 'close': S.drawer=null; S.overlay=null; S.ticketErr=false; render(); break;
+    case 'signin': {
+      const id = ($('#si-id')||{}).value, mail = ($('#si-mail')||{}).value;
+      const p = PEOPLE.find(x=>x.id===String(id).trim());
+      if(!id || !mail){ S.signinErr=true; render(); toast('Enter your employee ID and work email.',true); break; }
+      if(!p || (mail && p.email!==mail.trim())){ S.signinErr=true; render(); break; }
+      S.user=p; S.signinLoading=true; render();
+      setTimeout(()=>{ S.signinLoading=false; S.signinErr=false; go('overview'); },450);
+      break; }
+    case 'signout': S.overlay=null; S.screen='signin'; S.signinErr=false; render(); break;
+    case 'generate': {
+      const cl = ($('#sd-client')||{}).value, ti = ($('#sd-title')||{}).value, ty=($('#sd-type')||{}).value, rv=($('#sd-rev')||{}).value;
+      if(!cl){ toast('Pick a client first.',true); break; }
+      const name = cl.split(' · ')[0], pre = cl.split(' · ')[1];
+      const title = ti || 'Launch teaser — hoarding';
+      const revises = rv && rv!=='Not a revision' ? rv.split(' · ')[0] : null;
+      const id = `${pre}-0416`;
+      const slug = title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+      const link = `https://script.google.com/macros/s/AKfy…/exec?c=${id}&t=k7m2pq4z`;
+      const contact = (cliOf(name)||{}).contact || 'Approver';
+      S.docket = { id, client:name, title, type:ty, ver:revises?2:1, revises, by:S.user.name, bid:S.user.id, sent:'26 Aug 26',
+        file:`${id}_${slug}_v${revises?2:1}`, link,
+        msg:`Hi ${contact} — ${name},\nSharing for your review — ${title} (${ty}). Ref: ${id}.\nPlease put your feedback on this link. It is tied to this exact piece, so nothing gets mixed up:\n${link}\n— ${S.user.name}, Influidity` };
+      render(); toast(`${id} registered`); break; }
+    case 'clear-docket': S.docket=null; S.docketWarn=false; S.docketNoNumber=false; render(); break;
+    case 'tog-warn': S.docketWarn=!S.docketWarn; render(); break;
+    case 'tog-nonum': S.docketNoNumber=!S.docketNoNumber; render(); break;
+    case 'copy': navigator.clipboard && navigator.clipboard.writeText(d.val); toast('Link copied'); break;
+    case 'whatsapp': toast('Opening WhatsApp…'); break;
+    case 'nudge': toast(`Nudge drafted for ${d.id}`); break;
+    case 'openclient': S.drawer=null; S.cliState='idle'; go('client'); break;
+    case 'clear-c': S.cFilter={q:'',client:'',status:'',type:'',by:''}; S.cEmpty=false; render(); break;
+    case 'tog-empty': S.cEmpty=!S.cEmpty; render(); break;
+    case 'clear-sel': S.cSel=[]; render(); break;
+    case 'bulk-apply': {
+      const v = ($('#bulk-status')||{}).value;
+      if(!v){ toast('Pick a status first.',true); break; }
+      const risky = S.cSel.some(id=>openTix(id).length>0);
+      if(v==='Approved' && risky){ S.overlay='confirm'; render(); break; }
+      S.cSel.forEach(id=>{ coll(id).status=v; }); const n=S.cSel.length; S.cSel=[]; render(); toast(`${n} set to ${v}`); break; }
+    case 'approve-anyway': S.cSel.forEach(id=>{coll(id).status='Approved';}); { const n=S.cSel.length; S.cSel=[]; S.overlay=null; render(); toast(`${n} approved`);} break;
+    case 'tog-mine': S.tFilter.mine=!S.tFilter.mine; render(); break;
+    case 'tog-group': S.tGroup=!S.tGroup; render(); break;
+    case 'clear-t': S.tFilter={mine:false,client:'',coll:'',who:'',status:'',pri:'',area:''}; render(); break;
+    case 'clear-tsel': S.tSel=[]; render(); break;
+    case 'tix-done': S.tSel.forEach(id=>{TICKETS.find(t=>t.id===id).status='Done';}); { const n=S.tSel.length; S.tSel=[]; render(); toast(`${n} marked done`);} break;
+    case 'markdone': TICKETS.find(t=>t.id===d.id).status='Done'; render(); toast('1 marked done'); break;
+    case 'save-ticket': {
+      const c = ($('#mt-coll')||{}).value, txt = (($('#mt-change')||{}).value||'').trim();
+      if(!c){ S.ticketErr=true; render(); break; }
+      if(txt.split(/\s+/).filter(Boolean).length>15){
+        S.splitRaw = txt;
+        S.splitLines = txt.split(/\s+and\s+(?:also\s+)?/i).map(x=>x.trim()).filter(Boolean).map(x=>x[0].toUpperCase()+x.slice(1));
+        S.overlay='split'; render(); break; }
+      S.overlay=null; S.ticketErr=false; render(); toast('T-0013 added'); break; }
+    case 'split-rm': S.splitLines.splice(+d.i,1); render(); break;
+    case 'split-add': S.splitLines.push(''); render(); break;
+    case 'save-split': { const n=S.splitLines.length; S.overlay=null; go('tickets'); toast(`${n} tickets added`); break; }
+    case 'save-client': S.overlay=null; render(); toast('Client saved'); break;
+    case 'reset': S.overlay=null; S.screen='signin'; render(); toast('Demo data reset'); break;
+    case 'tog-mode': S.mode = S.mode==='Demo data' ? 'Live · Sheets' : 'Demo data'; render(); break;
+    case 'become-admin': S.user=PEOPLE[1]; render(); break;
+    case 'become-member': S.user=PEOPLE[2]; go('settings'); break;
+    case 'contact-admin': toast('Message drafted to Jitendra #022'); break;
+    case 'saved': toast('Saved'); break;
+    case 'demo-toast': toast('VUM-0416 registered'); break;
+  }
+});
+
+document.addEventListener('change', e => {
+  const f = e.target.dataset.filter, ed = e.target.dataset.edit;
+  if(e.target.id==='sd-client'){
+    const name = (e.target.value||'').split(' \u00b7 ')[0];
+    const live = COLLATERALS.filter(c=>c.client===name && c.status!=='Archived');
+    const sel = $('#sd-rev'); if(sel){
+      if(live.length){ sel.disabled=false; sel.innerHTML = '<option>Not a revision</option>'+live.map(c=>`<option>${c.id} \u00b7 v${c.ver} \u00b7 ${esc(c.title)}</option>`).join(''); }
+      else { sel.disabled=true; sel.innerHTML = '<option>Nothing to revise yet</option>'; }
+    }
+  }
+  if(f){ const [k,key]=f.split(':'); (k==='c'?S.cFilter:S.tFilter)[key]=e.target.value; if(k==='c') S.cEmpty=false; render(); }
+  if(ed){ const [field,id]=ed.split(':'); const t=TICKETS.find(x=>x.id===id); if(t){ t[field]=e.target.value; render(); toast(`${id} updated`);} }
+});
+document.addEventListener('input', e => {
+  if(e.target.dataset.filter==='c:q'){ S.cFilter.q=e.target.value; S.cEmpty=false;
+    const v=e.target.value, sel=e.target.selectionStart; render();
+    const n=document.querySelector('[data-filter="c:q"]'); if(n){ n.focus(); n.setSelectionRange(sel,sel); } }
+  if(e.target.id==='mt-change'){ const n=e.target.value.trim().split(/\s+/).filter(Boolean).length;
+    const c=$('#mt-count'); if(c){ c.textContent=n+'/15'; c.style.color = n>15?'var(--amber)':'var(--muted)'; } }
+  if(e.target.dataset.split!==undefined){ S.splitLines[+e.target.dataset.split]=e.target.value; }
+});
+document.addEventListener('keydown', e => { if(e.key==='Escape' && (S.drawer||S.overlay)){ S.drawer=null; S.overlay=null; render(); } });
+
+render();
+</script></body></html>
