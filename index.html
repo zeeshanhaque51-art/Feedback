@@ -9,9 +9,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --teal:#00B9BB; --teal-deep:#00888A; --teal-soft:#E1F5F5; --teal-hair:#9DE0E1;
-  --ink:#1C0B2A; --shell:#F4F4F3; --surface:#FFFFFF; --raised:#FAFAF9;
-  --body:#5C5A63; --muted:#8F8C96; --border:#DEDDDA; --hair:#EDECEA;
+  --teal:#17A8A5; --teal-deep:#0D8B89; --teal-soft:#E4F4F3; --teal-hair:#A9DEDB;
+  --brand:linear-gradient(152deg,#2BB9B3 0%,#149E9C 46%,#0B8482 100%);
+  --ink:#152A33; --shell:#EFF7F6; --surface:#FFFFFF; --raised:#F7FBFB;
+  --body:#5A7378; --muted:#8CA3A6; --border:#DCE9E8; --hair:#EAF2F1;
+  --field:#E9F5F4; --field-line:#CBE6E4;
+  --shadow:0 18px 48px rgba(12,104,102,.10), 0 2px 6px rgba(12,104,102,.05);
   --green:#0E7A55; --red:#BF2C1E; --amber:#8A5A00;
   --sans:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
@@ -25,25 +28,31 @@ input,textarea{font-family:inherit;font-size:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--teal);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-.band{background:var(--surface);border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center;gap:9px;padding:0 18px;position:sticky;top:0;z-index:10}
-.band .bdot{width:11px;height:11px;border-radius:50%;background:var(--teal);flex:none}
+.band{background:var(--brand);color:#fff;height:58px;display:flex;align-items:center;gap:10px;padding:0 18px;position:sticky;top:0;z-index:10}
+.band .bmark{width:28px;height:28px;border-radius:9px;background:rgba(255,255,255,.20);border:1px solid rgba(255,255,255,.32);display:flex;align-items:center;justify-content:center;flex:none}
 .band .bname{font-weight:600;letter-spacing:-0.03em;font-size:15px}
-.band .bid{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto}
+.band .bid{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.80);margin-left:auto}
 
-.wrap{max-width:480px;margin:0 auto;padding:22px 18px 60px}
+/* One floating card holds whichever screen the client is on. */
+.wrap{max-width:470px;margin:26px auto 64px;background:var(--surface);border-radius:22px;
+  box-shadow:var(--shadow);padding:26px 24px 28px}
+@media (max-width:520px){.wrap{margin:14px 12px 44px;padding:22px 18px 24px;border-radius:18px}}
 h2{font-size:22px;font-weight:600;letter-spacing:-0.03em;line-height:1.25}
 .lead{color:var(--body);margin-top:8px;font-size:14.5px}
 .micro{font-size:9px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--muted);display:block;margin-bottom:6px}
 .muted{color:var(--muted)}
 .hide{display:none!important}
 
-.piece{background:var(--surface);border:1px solid var(--border);border-radius:11px;overflow:hidden;margin-bottom:24px}
+.piece{background:var(--raised);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:22px}
+.piece .shotwrap{background:#F0EFEC;display:block;line-height:0}
+.piece .shot{width:100%;height:auto;max-height:60vh;object-fit:contain;display:block}
+.piece .filelink{display:block;padding:26px 14px;text-align:center;color:var(--teal-deep);font-weight:600;font-size:14px}
 .piece .art{height:112px;background:linear-gradient(135deg,#1C0B2A,#00888A);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px;text-align:center;padding:0 18px}
 .piece .meta{padding:11px 14px;font-size:12.5px;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .piece .meta b{color:var(--ink);font-weight:600}
 
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 22px;border-radius:999px;font-size:15px;font-weight:600;letter-spacing:-0.01em;border:1px solid transparent;width:100%}
-.btn-teal{background:var(--teal);color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:50px;padding:0 22px;border-radius:12px;font-size:15px;font-weight:600;letter-spacing:-0.01em;border:1px solid transparent;width:100%}
+.btn-teal{background:var(--teal);color:#fff;box-shadow:0 6px 18px rgba(12,104,102,.18)}
 .btn-ink{background:var(--ink);color:#fff}
 .btn-ghost{background:var(--surface);border-color:var(--border);color:var(--ink)}
 .btn-sm{height:38px;font-size:13.5px}
@@ -51,38 +60,40 @@ h2{font-size:22px;font-weight:600;letter-spacing:-0.03em;line-height:1.25}
 .stack>*{margin-top:10px}
 
 .recwrap{text-align:center;padding:14px 0 4px}
-.rec{width:132px;height:132px;border-radius:50%;background:var(--teal);display:inline-flex;align-items:center;justify-content:center;
+.rec{width:132px;height:132px;border-radius:50%;background:var(--brand);box-shadow:0 12px 34px rgba(12,104,102,.24);display:inline-flex;align-items:center;justify-content:center;
   box-shadow:0 0 0 0 rgba(0,185,187,.55);transition:background .15s}
-.rec:active{background:#00a6a8}
-.rec.on{background:var(--red);animation:pulse 1.6s infinite}
+.rec:active{filter:brightness(.94)}
+.rec.on{background:var(--red);animation:pulse 1.6s infinite;box-shadow:0 12px 34px rgba(191,44,30,.24)}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(191,44,30,.45)}70%{box-shadow:0 0 0 22px rgba(191,44,30,0)}100%{box-shadow:0 0 0 0 rgba(191,44,30,0)}}
 .wave{height:30px;display:flex;align-items:center;justify-content:center;gap:3px;margin:14px 0 6px}
 .wave i{width:3px;background:var(--teal-deep);border-radius:2px;height:5px;transition:height .08s linear}
 .timer{font-family:var(--mono);font-size:13px;color:var(--muted)}
 .status{font-size:13.5px;color:var(--body);min-height:20px;margin-top:6px}
 
-.pt{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 12px 12px 0;display:flex;gap:10px;align-items:flex-start;margin-bottom:9px}
+.pt{background:var(--raised);border:1px solid var(--border);border-radius:14px;padding:12px 12px 12px 0;display:flex;gap:10px;align-items:flex-start;margin-bottom:9px}
 .pt .idx{width:26px;height:26px;border-radius:50%;background:var(--teal-soft);color:var(--teal-deep);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none;margin-left:12px}
 .pt .txt{flex:1;min-width:0}
 .pt textarea{width:100%;border:none;background:none;resize:none;font-size:14.5px;line-height:1.45;overflow:hidden}
+.pt .heard{display:block;font-size:12px;color:var(--muted);font-style:italic;margin-top:5px;line-height:1.4}
 .pt .area{display:inline-flex;align-items:center;height:20px;padding:0 9px;border-radius:999px;border:1px solid var(--teal-hair);color:var(--teal-deep);font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-top:5px}
 .pt .x{width:30px;height:30px;color:var(--muted);font-size:20px;line-height:1;flex:none}
 
-.note{background:var(--teal-soft);border:1px solid var(--teal-hair);border-radius:10px;padding:12px 14px;font-size:13.5px;margin-bottom:18px}
-.warn{background:#FFF6E6;border:1px solid #F0D9A8;border-radius:10px;padding:12px 14px;font-size:13.5px;margin-bottom:18px;color:var(--amber)}
-.tick{width:60px;height:60px;border-radius:50%;background:var(--teal);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--ink)}
-.typed{width:100%;border:1px solid var(--border);border-radius:10px;padding:12px;min-height:120px;font-size:15px;line-height:1.5;resize:vertical;background:var(--surface)}
+.note{background:var(--teal-soft);border:1px solid var(--teal-hair);border-radius:14px;padding:12px 14px;font-size:13.5px;margin-bottom:18px}
+.warn{background:#FFF6E6;border:1px solid #F0D9A8;border-radius:14px;padding:12px 14px;font-size:13.5px;margin-bottom:18px;color:var(--amber)}
+.tick{width:64px;height:64px;border-radius:50%;background:var(--brand);margin:0 auto 22px;display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;box-shadow:0 10px 26px rgba(12,104,102,.22)}
+.typed{width:100%;border:1px solid var(--field-line);border-radius:14px;padding:13px;min-height:130px;font-size:15px;line-height:1.5;resize:vertical;background:var(--field)}
+.typed:focus{background:var(--surface)}
 .center{text-align:center}
 .spin{width:34px;height:34px;border:3px solid var(--hair);border-top-color:var(--teal-deep);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto}
 @keyframes sp{to{transform:rotate(360deg)}}
 .playback{width:100%;margin-top:14px}
-.foot{margin-top:28px;font-size:11.5px;color:var(--muted);text-align:center;line-height:1.5}
+.foot{margin-top:24px;font-size:11.5px;color:var(--muted);text-align:center;line-height:1.5}
 </style>
 </head>
 <body>
 
 <div class="band">
-  <span class="bdot"></span><span class="bname">Influidity</span>
+  <span class="bmark"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3c3.5 3 5 5.6 5 8.4A5 5 0 017 11.4C7 8.6 8.5 6 12 3z" fill="#fff" opacity=".94"/><circle cx="12" cy="18.5" r="2.1" fill="#fff"/></svg></span><span class="bname">Influidity</span>
   <span class="bid" id="band-id"></span>
 </div>
 
@@ -114,12 +125,19 @@ let submissionId = '';
 // text/plain keeps it a "simple request" so the browser skips the CORS preflight
 // that Apps Script cannot answer.
 async function call(action, payload){
-  const r = await fetch(API, {
+  // action/c/t also go in the query string. Apps Script sometimes turns the
+  // POST into a GET while redirecting, which throws the body away — this way
+  // the essentials survive either route.
+  const url = API + '?action=' + encodeURIComponent(action)
+            + '&c=' + encodeURIComponent(CID) + '&t=' + encodeURIComponent(TOK);
+  const r = await fetch(url, {
     method:'POST',
     headers:{'Content-Type':'text/plain;charset=utf-8'},
     body: JSON.stringify(Object.assign({action, c:CID, t:TOK}, payload||{}))
   });
-  const j = await r.json();
+  let j;
+  try{ j = await r.json(); }
+  catch(e){ throw new Error('The server did not reply properly. Check that the web app is deployed with access set to Anyone.'); }
   if(!j.ok) throw new Error(j.error || 'Something went wrong.');
   return j;
 }
@@ -214,9 +232,22 @@ function drawWave(data){
 }
 
 /* ───────── screens ───────── */
+/* Turns whatever was pasted into file_link into something a browser can show.
+   Handles Drive share links, direct image URLs and video URLs. */
+function media(url){
+  if(!url) return '';
+  const u = String(url).trim();
+  const drive = u.match(/drive\.google\.com\/file\/d\/([^/]+)/) || u.match(/[?&]id=([^&]+)/);
+  if(drive) return `<img class="shot" src="https://drive.google.com/thumbnail?id=${drive[1]}&sz=w1400" alt="${esc(piece.title)}" loading="lazy" onerror="this.parentNode.className='art';this.remove()">`;
+  if(/\.(mp4|webm|mov)(\?|$)/i.test(u)) return `<video class="shot" src="${esc(u)}" controls playsinline></video>`;
+  if(/\.(png|jpe?g|gif|webp|avif|svg)(\?|$)/i.test(u)) return `<img class="shot" src="${esc(u)}" alt="${esc(piece.title)}" loading="lazy" onerror="this.parentNode.className='art';this.remove()">`;
+  return `<a class="filelink" href="${esc(u)}" target="_blank" rel="noopener">Open the creative \u2197</a>`;
+}
+
 function art(){
+  const m = media(piece.file);
   return `<div class="piece">
-    <div class="art">${esc(piece.title)}</div>
+    ${m ? `<div class="shotwrap">${m}</div>` : `<div class="art">${esc(piece.title)}</div>`}
     <div class="meta"><b>${esc(piece.client)}</b> · ${esc(piece.type)} · v${piece.version}
       <span style="margin-left:auto" class="mono">${esc(piece.id)}</span></div>
   </div>`;
@@ -232,8 +263,8 @@ function scIdle(warn){
     <div class="recwrap">
       <button class="rec" id="mic" aria-label="Start recording">
         <svg width="42" height="42" viewBox="0 0 24 24" fill="none">
-          <rect x="9" y="3" width="6" height="11" rx="3" fill="#1C0B2A"/>
-          <path d="M5 11a7 7 0 0014 0M12 18v3" stroke="#1C0B2A" stroke-width="2" stroke-linecap="round"/>
+          <rect x="9" y="3" width="6" height="11" rx="3" fill="#fff"/>
+          <path d="M5 11a7 7 0 0014 0M12 18v3" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
         </svg>
       </button>
       <div class="wave"></div>
@@ -312,6 +343,7 @@ function row(p,i){
     <span class="idx">${i+1}</span>
     <div class="txt">
       <textarea rows="1" data-edit="${i}" placeholder="Describe the change">${esc(p.change)}</textarea>
+      ${p.heard ? `<span class="heard">you said: \u201c${esc(p.heard)}\u201d</span>` : ''}
       <span class="area">${esc(p.area||'Other')}</span>
     </div>
     <button class="x" data-rm="${i}" aria-label="Remove point ${i+1}">×</button>
@@ -378,13 +410,17 @@ async function send(typed){
     transcript = r.transcript || transcript;
     lang = r.language || '';
     submissionId = r.submissionId || '';
-    if(!points.length){ scIdle(`<b>We couldn't make out any changes there.</b> Try again a little closer to the phone, or type it instead.`); return; }
+    if(!points.length){
+      scIdle(r.dropped
+        ? `<b>We couldn't be sure what you wanted changed.</b> Try again saying each change in a short separate sentence, or type it instead.`
+        : `<b>We couldn't make out any changes there.</b> Try again a little closer to the phone, or type it instead.`);
+      return; }
     scReview();
   }catch(err){ scError(err.message, ()=>scIdle()); }
 }
 
 async function confirmPoints(){
-  const clean = points.map(p=>({change:(p.change||'').trim(), area:p.area||'Other'})).filter(p=>p.change);
+  const clean = points.map(p=>({change:(p.change||'').trim(), area:p.area||'Other', heard:p.heard||''})).filter(p=>p.change);
   if(!clean.length) return;
   const btn = document.getElementById('confirm');
   btn.disabled = true; btn.textContent = 'Sending…';
@@ -394,9 +430,27 @@ async function confirmPoints(){
   }catch(err){ scError(err.message, ()=>scReview()); }
 }
 
-async function approve(){
-  try{ await call('approve', {}); scApproved(); }
-  catch(err){ scError(err.message, ()=>scIdle()); }
+async function approve(force){
+  try{
+    const r = await call('approve', force ? {force:true} : {});
+    if(r.needsConfirm){ scApproveConfirm(r.openTickets); return; }
+    scApproved();
+  }catch(err){ scError(err.message, ()=>scIdle()); }
+}
+
+function scApproveConfirm(n){
+  app.innerHTML = `${art()}
+    <div class="warn"><b>Your team is still working on ${n} change${n===1?'':'s'} you asked for earlier.</b>
+    Approving now closes ${n===1?'it':'them'} unfinished.</div>
+    <h2>Approve anyway?</h2>
+    <p class="lead">If you were expecting those changes in this version, go back and let us finish them first.</p>
+    <div class="stack" style="margin-top:22px">
+      <button class="btn btn-ghost" id="wait">Not yet \u2014 finish them first</button>
+      <button class="btn btn-teal" id="anyway">Yes, approve as it is</button>
+    </div>
+    ${footer()}`;
+  document.getElementById('wait').onclick = ()=>scIdle();
+  document.getElementById('anyway').onclick = ()=>approve(true);
 }
 
 /* ───────── boot ───────── */
@@ -407,6 +461,7 @@ async function approve(){
   try{
     const r = await call('getCollateral', {});
     piece = r.collateral;
+    if(!piece) throw new Error('The server answered, but sent no creative details. Redeploy the Apps Script as a NEW version and try again.');
     if(piece.status === 'Approved'){ scApproved(); return; }
     if(piece.status === 'Archived'){
       app.innerHTML = `<div class="center" style="padding-top:60px"><h2>A newer version has been sent.</h2>
