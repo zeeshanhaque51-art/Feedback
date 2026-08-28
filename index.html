@@ -109,7 +109,7 @@ const MAX_SECONDS = 120;
 /* ════════════════════════════════════════════════════════════ */
 
 const qs = new URLSearchParams(location.search);
-const CID = qs.get('c') || '';
+const CID = qs.get('ref') || qs.get('c') || '';   // 'c' kept for links sent before the rename
 const TOK = qs.get('t') || '';
 const app = document.getElementById('app');
 
@@ -129,11 +129,11 @@ async function call(action, payload){
   // POST into a GET while redirecting, which throws the body away — this way
   // the essentials survive either route.
   const url = API + '?action=' + encodeURIComponent(action)
-            + '&c=' + encodeURIComponent(CID) + '&t=' + encodeURIComponent(TOK);
+            + '&ref=' + encodeURIComponent(CID) + '&t=' + encodeURIComponent(TOK);
   const r = await fetch(url, {
     method:'POST',
     headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body: JSON.stringify(Object.assign({action, c:CID, t:TOK}, payload||{}))
+    body: JSON.stringify(Object.assign({action, ref:CID, c:CID, t:TOK}, payload||{}))
   });
   let j;
   try{ j = await r.json(); }
